@@ -72,6 +72,20 @@ export default async function LeadDetailPage({
               render={<Link href={`/dashboard/leads/${lead.id}/referral`}>Open referral</Link>}
             />
           )}
+          {lead.productType === "VEHICLE_LOAN" && (
+            <Button
+              size="sm"
+              nativeButton={false}
+              render={<Link href={`/dashboard/leads/${lead.id}/vehicle`}>Open application</Link>}
+            />
+          )}
+          {lead.productType === "BUSINESS_LOAN" && (
+            <Button
+              size="sm"
+              nativeButton={false}
+              render={<Link href={`/dashboard/leads/${lead.id}/business`}>Open referral</Link>}
+            />
+          )}
           <StatusBadge status={lead.status} />
         </div>
       </div>

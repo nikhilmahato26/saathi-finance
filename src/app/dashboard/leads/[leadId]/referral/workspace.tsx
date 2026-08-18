@@ -64,6 +64,7 @@ export function ReferralWorkspace({
 
         {current === "basic-details" && (
           <BasicDetailsStation
+            key={JSON.stringify(fields.basicDetails)}
             action={saveBasicDetails.bind(null, leadId)}
             initial={fields.basicDetails}
             onSaved={() => goToNext("basic-details")}
@@ -71,6 +72,7 @@ export function ReferralWorkspace({
         )}
         {current === "employment" && (
           <EmploymentStation
+            key={JSON.stringify(fields.employment)}
             action={saveEmployment.bind(null, leadId)}
             initial={fields.employment}
             onSaved={() => goToNext("employment")}
@@ -78,6 +80,7 @@ export function ReferralWorkspace({
         )}
         {current === "eligibility" && (
           <EligibilityStation
+            key={JSON.stringify(fields.eligibility)}
             action={saveEligibility.bind(null, leadId)}
             initial={fields.eligibility}
             lenders={lenders}
