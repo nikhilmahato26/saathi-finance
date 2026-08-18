@@ -38,6 +38,7 @@ export default async function LendersPage() {
                     Referral URL
                   </Label>
                   <Input
+                    key={lender.referralUrl ?? ""}
                     id={`url-${lender.id}`}
                     name="referralUrl"
                     type="url"

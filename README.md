@@ -45,6 +45,14 @@ No SMS provider is wired up yet. Every OTP is fixed to **`123456`** (`DEV_FIXED_
 - Stations: basic details, employment, eligibility & consent (pick the matched lender from an Admin-managed list), referral (shows a real "Open {Lender}'s application" link if a URL is configured, or an honest "not configured yet" message if not — then captures the application/reference number + a confirmation screenshot upload).
 - Lender list is Admin-manageable at `/dashboard/admin/lenders` (`Lender` model: name, slug, referralUrl, active) — not hardcoded, since more lenders get added over time. Currently seeded: **HDFC Bank** and **ICICI Bank**, both with `referralUrl: null` — real URLs still need to be added by an Admin once you have them (see Handoff notes below).
 
+**Vehicle Loan — internal-application flow** (`/dashboard/leads/[leadId]/vehicle`), templated off Home Loan's Inspection Station pattern
+- Stations: customer details (reuses Personal Loan's basic-details shape), vehicle details (condition New/Used, type Car/Commercial Vehicle/Tractor), dealer & quotation, loan requirement (down payment/tenure), documents (income docs always, RC/Insurance/NOC added only when condition is Used — `getRequiredDocuments()` in `src/lib/vehicle-loan-schema.ts`), review & submit.
+- No processing fee or generated PDF (PRODUCT.md's Vehicle Loan sequence doesn't call for either, unlike Home Loan) — the final station just records `LoanApplication.submittedAt` and advances status to Login; Sanction/Disbursement/Rejected from there are the same manual status changes as every other product.
+
+**Business Loan — external-referral flow** (`/dashboard/leads/[leadId]/business`), templated off Personal Loan's referral pattern
+- Stations: owner & business info (name/GSTIN/vintage), turnover & income, existing obligations (EMI/running loans), loan requirement (amount/purpose), documents (ITR/GST/Bank Statement), eligibility & consent, referral — the last two stations directly reuse Personal Loan's `EligibilityStation`/`ReferralStation` components and schemas since the shape (consent + lender pick; reference number + screenshot) is identical.
+- Unlike Personal Loan, Business Loan has a Documents station (PRODUCT.md calls for ITR/GST/Bank Statement uploads) — advances through Documents Pending → Documents Complete the same way Home/Vehicle Loan do, which Personal Loan's flow doesn't need.
+
 **Admin**
 - Lead list/detail, manual status changes with `StatusHistoryEntry` + `ActivityLog` writes on every mutation.
 - Lenders CRUD (add lender, edit URL, activate/deactivate) at `/dashboard/admin/lenders`.
@@ -58,7 +66,7 @@ No SMS provider is wired up yet. Every OTP is fixed to **`123456`** (`DEV_FIXED_
 - **Open decision, not yet made**: whether Insurance / Tax / Banking & Cards referral flows follow the same fixed-lender-link + reference-number + screenshot pattern as Personal/Business Loan, or need something different. This was explicitly deferred by the client mid-build ("we will discuss 4 later") — **don't build those flows until this is resolved**, since it changes the shape of the work.
 
 **Phase 2 (per PRODUCT.md's roadmap, next up)**
-- Business Loan and Vehicle Loan flows — straightforward templating off the two existing reference implementations (Business Loan off Personal Loan's referral pattern, Vehicle Loan off Home Loan's Inspection Station pattern). `src/lib/products.ts` already lists both with the right `routeType`; the lead detail page (`src/app/dashboard/leads/[leadId]/page.tsx`) just needs an "Open application"/"Open referral" branch added for them once the workspace routes exist, same as the existing `HOME_LOAN`/`PERSONAL_LOAN` branches.
+- ~~Business Loan and Vehicle Loan flows~~ — **done**: Business Loan (`/dashboard/leads/[leadId]/business`) and Vehicle Loan (`/dashboard/leads/[leadId]/vehicle`), templated off the two existing reference implementations as described above. Lead detail page branches wired up.
 - Insurance (5 types), Tax (5 types), Banking & Cards (3 types) service flows — all `EXTERNAL_REFERRAL`, all currently unbuilt (leads can be created for these product types but there's no station workspace yet, so staff have nowhere to work them). Blocked on the point-4 decision above.
 - In-app notification feed (9 trigger types listed in PRODUCT.md; email/WhatsApp fan-out deferred further, pending provider choice).
 

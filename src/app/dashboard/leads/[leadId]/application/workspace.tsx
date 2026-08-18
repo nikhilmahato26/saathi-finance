@@ -60,10 +60,16 @@ export function ApplicationWorkspace({
         </p>
 
         {current === "kyc" && (
-          <KycStation leadId={leadId} initial={fields.kyc} onSaved={() => goToNext("kyc")} />
+          <KycStation
+            key={JSON.stringify(fields.kyc)}
+            leadId={leadId}
+            initial={fields.kyc}
+            onSaved={() => goToNext("kyc")}
+          />
         )}
         {current === "employment" && (
           <EmploymentStation
+            key={JSON.stringify(fields.employment)}
             action={saveEmployment.bind(null, leadId)}
             initial={fields.employment}
             onSaved={() => goToNext("employment")}
@@ -71,6 +77,7 @@ export function ApplicationWorkspace({
         )}
         {current === "loan-details" && (
           <LoanDetailsStation
+            key={JSON.stringify(fields.loanDetails)}
             leadId={leadId}
             initial={fields.loanDetails}
             onSaved={() => goToNext("loan-details")}
@@ -78,6 +85,7 @@ export function ApplicationWorkspace({
         )}
         {current === "property" && (
           <PropertyStation
+            key={JSON.stringify(fields.property)}
             leadId={leadId}
             initial={fields.property}
             onSaved={() => goToNext("property")}
