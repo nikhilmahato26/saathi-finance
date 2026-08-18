@@ -1,0 +1,41 @@
+- generic [ref=f27e1]:
+  - generic [active]:
+    - generic [ref=f27e4]:
+      - generic [ref=f27e5]:
+        - navigation [ref=f27e7]:
+          - button [disabled] [ref=f27e8]:
+            - img "previous" [ref=f27e9]
+          - generic [ref=f27e11]:
+            - generic [ref=f27e12]: 1/
+            - generic [ref=f27e13]: "1"
+          - button [disabled] [ref=f27e14]:
+            - img "next" [ref=f27e15]
+        - generic [ref=f27e18]:
+          - generic "Latest available version is detected (16.3.1)." [ref=f27e21]: Next.js 16.3.1
+          - generic [ref=f27e22]: Turbopack
+      - dialog "Runtime PrismaClientValidationError" [ref=f27e24]:
+        - generic [ref=f27e29]:
+          - generic [ref=f27e30]:
+            - generic [ref=f27e31]:
+              - generic [ref=f27e32]: Runtime PrismaClientValidationError
+              - generic [ref=f27e33]: Server
+            - generic [ref=f27e34]:
+              - button "Copy Error Info" [ref=f27e35] [cursor=pointer]
+              - button "No related documentation found" [disabled] [ref=f27e38]
+              - button "Attach Node.js inspector" [ref=f27e41] [cursor=pointer]
+          - generic [ref=f27e50]: "Invalid `{imported module ./src/lib/db.ts}[\"db\"].lender.findUnique()` invocation in /Users/nikhil/Downloads/priority clients/saathi finance/.next/dev/server/chunks/ssr/[root-of-the-server]__1pwi_1a._.js:72:180 69 if (!lead) (0, {imported module ./nodemodules/next/dist/client/components/navigation.react-server.js}[\"notFound\"])(); 70 if (lead.productType !== \"PERSONAL_LOAN\") (0, {imported module ./nodemodules/next/dist/client/components/navigation.react-server.js}[\"notFound\"])(); 71 const fields = lead.application?.fieldsJson ?? {}; → 72 const matchedLender = fields.eligibility ? await {imported module ./src/lib/db.ts}[\"db\"].lender.findUnique({ where: { slug: undefined, ? id?: String, ? AND?: LenderWhereInput | LenderWhereInput[], ? OR?: LenderWhereInput[], ? NOT?: LenderWhereInput | LenderWhereInput[], ? name?: StringFilter | String, ? referralUrl?: StringNullableFilter | String | Null, ? active?: BoolFilter | Boolean, ? createdAt?: DateTimeFilter | DateTime, ? updatedAt?: DateTimeFilter | DateTime } }) Argument `where` of type LenderWhereUniqueInput needs at least one of `id` or `slug` arguments. Available options are marked with ?."
+          - button "Show More" [ref=f27e53] [cursor=pointer]
+    - generic [ref=f27e59] [cursor=pointer]:
+      - button "Open Next.js Dev Tools" [ref=f27e60]
+      - generic [ref=f27e64]:
+        - button "Open issues overlay" [ref=f27e65]:
+          - generic [ref=f27e66]:
+            - generic [ref=f27e67]: "0"
+            - generic [ref=f27e68]: "1"
+          - generic [ref=f27e69]: Issue
+        - button "Collapse issues badge" [ref=f27e70]
+  - generic [ref=f27e74]:
+    - heading "This page couldn’t load" [level=1] [ref=f27e77]
+    - paragraph [ref=f27e78]: A server error occurred. Reload to try again.
+    - button "Reload" [ref=f27e81] [cursor=pointer]
+  - paragraph [ref=f27e82]: ERROR 139012632

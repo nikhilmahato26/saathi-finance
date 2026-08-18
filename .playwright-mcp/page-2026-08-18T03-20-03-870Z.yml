@@ -1,0 +1,88 @@
+- generic [active] [ref=f30e1]:
+  - generic [ref=f30e2]:
+    - generic [ref=f30e5]:
+      - link "SAATHI FINANCE" [ref=f30e7] [cursor=pointer]:
+        - /url: /
+        - generic [ref=f30e8]: SAATHI
+        - generic [ref=f30e9]: FINANCE
+      - generic [ref=f30e11]:
+        - generic [ref=f30e12]: Admin
+        - list [ref=f30e14]:
+          - listitem [ref=f30e15]:
+            - link "Overview" [ref=f30e16] [cursor=pointer]:
+              - /url: /dashboard/admin
+          - listitem [ref=f30e17]:
+            - link "All leads" [ref=f30e18] [cursor=pointer]:
+              - /url: /dashboard/admin/leads
+          - listitem [ref=f30e19]:
+            - link "Employees" [ref=f30e20] [cursor=pointer]:
+              - /url: /dashboard/admin/employees
+          - listitem [ref=f30e21]:
+            - link "Partners" [ref=f30e22] [cursor=pointer]:
+              - /url: /dashboard/admin/partners
+          - listitem [ref=f30e23]:
+            - link "Lenders" [ref=f30e24] [cursor=pointer]:
+              - /url: /dashboard/admin/lenders
+          - listitem [ref=f30e25]:
+            - link "Reports" [ref=f30e26] [cursor=pointer]:
+              - /url: /dashboard/admin/reports
+          - listitem [ref=f30e27]:
+            - link "Activity log" [ref=f30e28] [cursor=pointer]:
+              - /url: /dashboard/admin/activity
+    - main [ref=f30e29]:
+      - generic [ref=f30e30]:
+        - generic [ref=f30e31]:
+          - button "Toggle Sidebar" [ref=f30e32]
+          - separator [ref=f30e34]
+          - generic [ref=f30e35]: Saathi Finance dashboard
+        - button "A" [ref=f30e36]
+      - main [ref=f30e39]:
+        - generic [ref=f30e40]:
+          - generic [ref=f30e41]:
+            - heading "Lenders" [level=1] [ref=f30e42]
+            - paragraph [ref=f30e43]: Real referral links Saathi already holds with partner banks. Staff open these themselves to fill in the bank's own application using details already collected from the customer.
+          - generic [ref=f30e44]:
+            - generic [ref=f30e45]:
+              - generic [ref=f30e46]:
+                - paragraph [ref=f30e47]: HDFC Bank
+                - paragraph [ref=f30e48]: HDFC
+              - generic [ref=f30e49]:
+                - generic [ref=f30e50]:
+                  - generic [ref=f30e51]: Referral URL
+                  - textbox "Referral URL" [ref=f30e52]:
+                    - /placeholder: Not configured yet
+                - button "Save" [ref=f30e53]
+              - generic [ref=f30e54]:
+                - generic [ref=f30e55]: Active
+                - button "Deactivate" [ref=f30e57]
+            - generic [ref=f30e58]:
+              - generic [ref=f30e59]:
+                - paragraph [ref=f30e60]: ICICI Bank
+                - paragraph [ref=f30e61]: ICICI
+              - generic [ref=f30e62]:
+                - generic [ref=f30e63]:
+                  - generic [ref=f30e64]: Referral URL
+                  - textbox "Referral URL" [ref=f30e65]:
+                    - /placeholder: Not configured yet
+                - button "Save" [ref=f30e66]
+              - generic [ref=f30e67]:
+                - generic [ref=f30e68]: Active
+                - button "Deactivate" [ref=f30e70]
+          - generic [ref=f30e71]:
+            - heading "Add a lender" [level=2] [ref=f30e72]
+            - generic [ref=f30e73]:
+              - generic [ref=f30e74]:
+                - generic [ref=f30e75]: Name
+                - textbox "Name" [ref=f30e76]:
+                  - /placeholder: Axis Bank
+              - generic [ref=f30e77]:
+                - generic [ref=f30e78]: Short code
+                - textbox "Short code" [ref=f30e79]:
+                  - /placeholder: AXIS
+              - generic [ref=f30e80]:
+                - generic [ref=f30e81]: Referral URL (optional)
+                - textbox "Referral URL (optional)" [ref=f30e82]:
+                  - /placeholder: https://...
+              - button "Add lender" [ref=f30e83]
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=f30e89] [cursor=pointer]

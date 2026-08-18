@@ -1,0 +1,71 @@
+- generic [active] [ref=f29e1]:
+  - generic [ref=f29e2]:
+    - generic [ref=f29e5]:
+      - link "SAATHI FINANCE" [ref=f29e7] [cursor=pointer]:
+        - /url: /
+        - generic [ref=f29e8]: SAATHI
+        - generic [ref=f29e9]: FINANCE
+      - generic [ref=f29e11]:
+        - generic [ref=f29e12]: Admin
+        - list [ref=f29e14]:
+          - listitem [ref=f29e15]:
+            - link "Overview" [ref=f29e16] [cursor=pointer]:
+              - /url: /dashboard/admin
+          - listitem [ref=f29e17]:
+            - link "All leads" [ref=f29e18] [cursor=pointer]:
+              - /url: /dashboard/admin/leads
+          - listitem [ref=f29e19]:
+            - link "Employees" [ref=f29e20] [cursor=pointer]:
+              - /url: /dashboard/admin/employees
+          - listitem [ref=f29e21]:
+            - link "Partners" [ref=f29e22] [cursor=pointer]:
+              - /url: /dashboard/admin/partners
+          - listitem [ref=f29e23]:
+            - link "Lenders" [ref=f29e24] [cursor=pointer]:
+              - /url: /dashboard/admin/lenders
+          - listitem [ref=f29e25]:
+            - link "Reports" [ref=f29e26] [cursor=pointer]:
+              - /url: /dashboard/admin/reports
+          - listitem [ref=f29e27]:
+            - link "Activity log" [ref=f29e28] [cursor=pointer]:
+              - /url: /dashboard/admin/activity
+    - main [ref=f29e29]:
+      - generic [ref=f29e30]:
+        - generic [ref=f29e31]:
+          - button "Toggle Sidebar" [ref=f29e32]
+          - separator [ref=f29e34]
+          - generic [ref=f29e35]: Saathi Finance dashboard
+        - button "A" [ref=f29e36]
+      - main [ref=f29e39]:
+        - generic [ref=f29e40]:
+          - generic [ref=f29e41]:
+            - link "← SF-2026-000003" [ref=f29e42] [cursor=pointer]:
+              - /url: /dashboard/leads/cmsxmo9rc000631ui3whpppac
+            - heading "Personal Loan Referral · Sunita Rao" [level=1] [ref=f29e43]
+          - generic [ref=f29e44]:
+            - navigation [ref=f29e45]:
+              - button "Basic Details" [ref=f29e85]
+              - button "Employment & Income" [ref=f29e121]
+              - button "Eligibility & Consent" [ref=f29e150]
+              - button "Referral" [ref=f29e171]
+            - generic [ref=f29e58]:
+              - paragraph [ref=f29e59]: Station 4 of 4
+              - generic [ref=f29e153]:
+                - img "Application seal mark" [ref=f29e174]
+                - heading "Referral recorded" [level=2] [ref=f29e178]
+                - paragraph [ref=f29e158]: "Applied on HDFC Bank's site. Reference: HDFC-PL-2026-889341"
+                - link "View confirmation screenshot" [ref=f29e179] [cursor=pointer]:
+                  - /url: /uploads/leads/cmsxmo9rc000631ui3whpppac/1787023180615-test-screenshot.png
+  - region "Notifications alt+T"
+  - generic [ref=f29e79] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=f29e80]
+    - generic [ref=f29e101]:
+      - button "Open issues overlay" [ref=f29e102]:
+        - generic [ref=f29e167]:
+          - generic [ref=f29e168]: "1"
+          - generic [ref=f29e169]: "2"
+        - generic [ref=f29e106]:
+          - text: Issue
+          - generic [ref=f29e170]: s
+      - button "Collapse issues badge" [ref=f29e107]
+  - alert [ref=f29e84]

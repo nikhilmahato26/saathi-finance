@@ -1,0 +1,4 @@
+[     138ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[     150ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:776
+[   25333ms] [ERROR] Base UI: A component is changing the default value state of an uncontrolled FieldControl after being initialized. To suppress this warning opt to use a controlled FieldControl. @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:1052
+[   92726ms] [ERROR] Base UI: A component is changing the default checked state of an uncontrolled Checkbox after being initialized. To suppress this warning opt to use a controlled Checkbox. @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:1052

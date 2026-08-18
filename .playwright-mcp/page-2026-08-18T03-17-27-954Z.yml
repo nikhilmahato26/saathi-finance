@@ -1,0 +1,78 @@
+- generic [active] [ref=f29e1]:
+  - generic [ref=f29e2]:
+    - generic [ref=f29e5]:
+      - link "SAATHI FINANCE" [ref=f29e7] [cursor=pointer]:
+        - /url: /
+        - generic [ref=f29e8]: SAATHI
+        - generic [ref=f29e9]: FINANCE
+      - generic [ref=f29e11]:
+        - generic [ref=f29e12]: Admin
+        - list [ref=f29e14]:
+          - listitem [ref=f29e15]:
+            - link "Overview" [ref=f29e16] [cursor=pointer]:
+              - /url: /dashboard/admin
+          - listitem [ref=f29e17]:
+            - link "All leads" [ref=f29e18] [cursor=pointer]:
+              - /url: /dashboard/admin/leads
+          - listitem [ref=f29e19]:
+            - link "Employees" [ref=f29e20] [cursor=pointer]:
+              - /url: /dashboard/admin/employees
+          - listitem [ref=f29e21]:
+            - link "Partners" [ref=f29e22] [cursor=pointer]:
+              - /url: /dashboard/admin/partners
+          - listitem [ref=f29e23]:
+            - link "Lenders" [ref=f29e24] [cursor=pointer]:
+              - /url: /dashboard/admin/lenders
+          - listitem [ref=f29e25]:
+            - link "Reports" [ref=f29e26] [cursor=pointer]:
+              - /url: /dashboard/admin/reports
+          - listitem [ref=f29e27]:
+            - link "Activity log" [ref=f29e28] [cursor=pointer]:
+              - /url: /dashboard/admin/activity
+    - main [ref=f29e29]:
+      - generic [ref=f29e30]:
+        - generic [ref=f29e31]:
+          - button "Toggle Sidebar" [ref=f29e32]
+          - separator [ref=f29e34]
+          - generic [ref=f29e35]: Saathi Finance dashboard
+        - button "A" [ref=f29e36]
+      - main [ref=f29e39]:
+        - generic [ref=f29e40]:
+          - generic [ref=f29e41]:
+            - link "← SF-2026-000003" [ref=f29e42] [cursor=pointer]:
+              - /url: /dashboard/leads/cmsxmo9rc000631ui3whpppac
+            - heading "Personal Loan Referral · Sunita Rao" [level=1] [ref=f29e43]
+          - generic [ref=f29e44]:
+            - navigation [ref=f29e45]:
+              - button "1 Basic Details" [ref=f29e46]:
+                - generic [ref=f29e47]: "1"
+                - generic [ref=f29e48]: Basic Details
+              - button "2 Employment & Income" [ref=f29e49]:
+                - generic [ref=f29e50]: "2"
+                - generic [ref=f29e51]: Employment & Income
+              - button "3 Eligibility & Consent" [ref=f29e52]:
+                - generic [ref=f29e53]: "3"
+                - generic [ref=f29e54]: Eligibility & Consent
+              - button "4 Referral" [ref=f29e55]:
+                - generic [ref=f29e56]: "4"
+                - generic [ref=f29e57]: Referral
+            - generic [ref=f29e58]:
+              - paragraph [ref=f29e59]: Station 1 of 4
+              - generic [ref=f29e60]:
+                - heading "Basic Details" [level=2] [ref=f29e61]
+                - generic [ref=f29e62]:
+                  - generic [ref=f29e63]: Date of birth
+                  - textbox "Date of birth" [ref=f29e64]
+                - generic [ref=f29e65]:
+                  - generic [ref=f29e66]: Address
+                  - textbox "Address" [ref=f29e67]
+                - generic [ref=f29e68]:
+                  - generic [ref=f29e69]: PAN
+                  - textbox "PAN" [ref=f29e70]:
+                    - /placeholder: ABCDE1234F
+                - generic [ref=f29e71]:
+                  - generic [ref=f29e72]: Aadhaar number
+                  - textbox "Aadhaar number" [ref=f29e73]
+                - button "Stamp & continue" [ref=f29e74]
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=f29e80] [cursor=pointer]

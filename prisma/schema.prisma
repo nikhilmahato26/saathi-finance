@@ -1,0 +1,224 @@
+// Saathi Finance - internal DSA operations-tracking system.
+// See PRODUCT.md for the full product record and Product Principles this schema implements.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  EMPLOYEE
+  PARTNER
+  CUSTOMER
+}
+
+enum ProductCategory {
+  LOAN
+  INSURANCE
+  TAX
+  BANKING
+}
+
+enum RouteType {
+  INTERNAL_APPLICATION
+  EXTERNAL_REFERRAL
+}
+
+enum LeadStatus {
+  NEW
+  PROFILE_PENDING
+  DOCUMENTS_PENDING
+  DOCUMENTS_COMPLETE
+  LOGIN
+  PROCESSING
+  SANCTION
+  DISBURSEMENT
+  REJECTED
+  ON_HOLD
+}
+
+enum LeadSource {
+  GOOGLE
+  DIRECT
+  PARTNER
+}
+
+model User {
+  id            String    @id @default(cuid())
+  role          Role
+  name          String
+  mobile        String    @unique
+  otpVerifiedAt DateTime?
+  email         String?   @unique
+  managerId     String?
+  manager       User?     @relation("ManagerTeam", fields: [managerId], references: [id])
+  team          User[]    @relation("ManagerTeam")
+  createdAt     DateTime  @default(now())
+
+  // Leads this user IS the customer for (basic-details submitter).
+  leadsAsCustomer Lead[]         @relation("CustomerLeads")
+  leadsAssigned   Lead[]         @relation("AssignedTo")
+  leadsCreated    Lead[]         @relation("CreatedBy")
+  activityLogs    ActivityLog[]
+  notifications   Notification[]
+  targets         Target[]
+
+  @@index([role])
+  @@index([managerId])
+}
+
+model Lead {
+  id          String          @id @default(cuid())
+  leadCode    String          @unique // SF-2026-XXXXXX
+  category    ProductCategory
+  productType String // e.g. HOME_LOAN, PERSONAL_LOAN, INSURANCE_VEHICLE, TAX_ITR, BANKING_SAVINGS
+  routeType   RouteType
+  status      LeadStatus      @default(NEW)
+  source      LeadSource
+
+  customer   User   @relation("CustomerLeads", fields: [customerId], references: [id])
+  customerId String
+
+  assignedTo   User?   @relation("AssignedTo", fields: [assignedToId], references: [id])
+  assignedToId String?
+
+  createdBy   User   @relation("CreatedBy", fields: [createdById], references: [id])
+  createdById String
+
+  lender       String? // referral products: matched lender/partner name
+  referralLink String? // tracked UTM + partner code URL
+
+  application   LoanApplication?
+  documents     Document[]
+  statusHistory StatusHistoryEntry[]
+  notes         Remark[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([assignedToId])
+  @@index([customerId])
+  @@index([category, productType])
+}
+
+// Every field here is entered manually by the assigned Employee/Partner
+// (Product Principle 2), never filled by the customer directly.
+model LoanApplication {
+  id                String    @id @default(cuid())
+  lead              Lead      @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  leadId            String    @unique
+  fieldsJson        Json      @default("{}") // product-specific structured form data
+  processingFeePaid Boolean   @default(false)
+  paymentRef        String?
+  paymentAmount     Int? // paise
+  pdfUrl            String?
+  submittedAt       DateTime?
+  updatedAt         DateTime  @updatedAt
+}
+
+model Document {
+  id         String   @id @default(cuid())
+  lead       Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  leadId     String
+  category   String // KYC | PROPERTY | INCOME
+  docType    String // Aadhaar Card, PAN Card, ...
+  fileUrl    String
+  uploadedBy String // User id of the Employee/Partner who attached it
+  uploadedAt DateTime @default(now())
+
+  @@index([leadId])
+}
+
+model StatusHistoryEntry {
+  id        String     @id @default(cuid())
+  lead      Lead       @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  leadId    String
+  status    LeadStatus
+  changedBy String // User id
+  changedAt DateTime   @default(now())
+
+  @@index([leadId])
+}
+
+model Remark {
+  id        String   @id @default(cuid())
+  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  leadId    String
+  authorId  String
+  text      String
+  createdAt DateTime @default(now())
+
+  @@index([leadId])
+}
+
+model ActivityLog {
+  id         String   @id @default(cuid())
+  actor      User     @relation(fields: [actorId], references: [id])
+  actorId    String
+  action     String // "FILE_CREATED" | "DOCUMENT_UPLOADED" | "STATUS_CHANGED" | ...
+  entityType String
+  entityId   String
+  ipAddress  String
+  createdAt  DateTime @default(now())
+
+  @@index([actorId])
+  @@index([entityType, entityId])
+}
+
+model Notification {
+  id        String    @id @default(cuid())
+  user      User      @relation(fields: [userId], references: [id])
+  userId    String
+  type      String // NEW_LEAD | FILE_SUBMITTED | FOLLOWUP_DUE | ...
+  payload   Json      @default("{}")
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId, readAt])
+}
+
+model Target {
+  id            String @id @default(cuid())
+  user          User   @relation(fields: [userId], references: [id])
+  userId        String
+  period        String // "2026-08"
+  targetValue   Int
+  achievedValue Int    @default(0)
+
+  @@unique([userId, period])
+}
+
+// Real referral/affiliate links Saathi already holds with partner banks
+// (HDFC, ICICI, ...). Fixed per bank, not generated per application - an
+// employee opens referralUrl themselves and fills the bank's own form using
+// details already collected from the customer (Product Principle 2).
+// Admin-managed so new lenders don't require a code change.
+model Lender {
+  id          String   @id @default(cuid())
+  name        String // "HDFC Bank"
+  slug        String   @unique // "HDFC"
+  referralUrl String? // null until the real partner link is added
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// One-time password codes for the mobile+OTP verification step
+// (customer lead-capture, and staff sign-in).
+model OtpCode {
+  id         String    @id @default(cuid())
+  mobile     String
+  code       String
+  expiresAt  DateTime
+  consumedAt DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([mobile])
+}
