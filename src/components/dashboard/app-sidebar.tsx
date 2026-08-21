@@ -28,13 +28,15 @@ const NAV_BY_ROLE: Record<Role, NavItem[]> = {
     { label: "Employees", href: "/dashboard/admin/employees" },
     { label: "Partners", href: "/dashboard/admin/partners" },
     { label: "Lenders", href: "/dashboard/admin/lenders" },
-    { label: "Reports", href: "/dashboard/admin/reports" },
+    { label: "Reports", href: "/dashboard/reports" },
     { label: "Activity log", href: "/dashboard/admin/activity" },
   ],
   MANAGER: [
     { label: "Overview", href: "/dashboard/manager" },
     { label: "Team leads", href: "/dashboard/manager/leads" },
     { label: "Team members", href: "/dashboard/manager/team" },
+    { label: "Team targets", href: "/dashboard/manager/targets" },
+    { label: "Reports", href: "/dashboard/reports" },
   ],
   EMPLOYEE: [
     { label: "My leads", href: "/dashboard/employee" },

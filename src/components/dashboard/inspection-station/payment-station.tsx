@@ -1,12 +1,14 @@
 "use client";
 
-import { useActionState, useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import { FormError } from "@/components/form-error";
 import { StampButton } from "./stamp-button";
 import {
   recordPayment,
+  initiateRazorpayPayment,
   type StationFormState,
 } from "@/app/dashboard/leads/[leadId]/application/actions";
 import { PROCESSING_FEE_INR } from "@/lib/home-loan-schema";
@@ -25,16 +27,61 @@ export function PaymentStation({
   paymentRef: string | null;
   onSaved: () => void;
 }) {
-  const action = recordPayment.bind(null, leadId);
-  const [state, formAction] = useActionState<StationFormState, FormData>(action, undefined);
-  const lastHandled = useRef<StationFormState>(undefined);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (state?.ok && state !== lastHandled.current) {
-      lastHandled.current = state;
-      onSaved();
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    document.body.appendChild(script);
+  }, []);
+
+  const handlePay = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const { orderId, amount } = await initiateRazorpayPayment(leadId, PROCESSING_FEE_INR * 100);
+
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_mock", 
+        amount: amount,
+        currency: "INR",
+        name: "Saathi Finance",
+        description: "Processing Fee",
+        order_id: orderId,
+        handler: async function (response: any) {
+          try {
+            const result = await recordPayment(
+              leadId, 
+              response.razorpay_payment_id, 
+              response.razorpay_order_id, 
+              response.razorpay_signature
+            );
+            if (result.error) {
+              setError(result.error);
+            } else {
+              onSaved();
+            }
+          } catch (e) {
+            setError("Error recording payment");
+          }
+        },
+        theme: {
+          color: "#0f172a"
+        }
+      };
+
+      const rzp = new (window as any).Razorpay(options);
+      rzp.on('payment.failed', function (response: any){
+        setError("Payment failed. Please try again.");
+      });
+      rzp.open();
+    } catch (e: any) {
+      setError(e.message || "Failed to initiate payment");
+    } finally {
+      setLoading(false);
     }
-  }, [state, onSaved]);
+  };
 
   if (paid) {
     return (
@@ -59,21 +106,18 @@ export function PaymentStation({
   }
 
   return (
-    <form action={formAction} className="grid max-w-lg gap-5">
+    <div className="grid max-w-lg gap-5">
       <h2 className="text-lg font-semibold">Payment</h2>
-      {state?.error && <FormError>{state.error}</FormError>}
+      {error && <FormError>{error}</FormError>}
 
       <p className="text-sm text-muted-foreground">
         Processing fee: <span className="font-semibold text-foreground">Rs. {PROCESSING_FEE_INR.toLocaleString("en-IN")}</span>.
-        Collected outside the app (cash / UPI) - record the reference below.
+        Pay securely using Razorpay to complete your application and generate the final PDF.
       </p>
 
-      <div className="grid gap-1.5">
-        <Label htmlFor="paymentRef">Payment reference</Label>
-        <Input id="paymentRef" name="paymentRef" placeholder="UPI ref or receipt number" required />
-      </div>
-
-      <StampButton label="Seal & generate PDF" />
-    </form>
+      <Button onClick={handlePay} disabled={loading} size="lg" className="w-full">
+        {loading ? "Initiating..." : "Pay with Razorpay"}
+      </Button>
+    </div>
   );
 }

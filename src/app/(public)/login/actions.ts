@@ -15,6 +15,6 @@ export async function requestStaffOtp(formData: FormData) {
     redirect("/login?error=notfound");
   }
 
-  await requestOtp(mobile);
-  redirect(`/login/verify?mobile=${mobile}`);
+  const res = await requestOtp(mobile);
+  redirect(`/login/verify?mobile=${mobile}&code=${res.devCode}`);
 }

@@ -184,15 +184,24 @@ model Notification {
   @@index([userId, readAt])
 }
 
-model Target {
-  id            String @id @default(cuid())
-  user          User   @relation(fields: [userId], references: [id])
-  userId        String
-  period        String // "2026-08"
-  targetValue   Int
-  achievedValue Int    @default(0)
+enum TargetType {
+  LEADS
+  APPLICATIONS
+  LOGIN
+  SANCTION
+  DISBURSEMENT
+}
 
-  @@unique([userId, period])
+model Target {
+  id            String     @id @default(cuid())
+  user          User       @relation(fields: [userId], references: [id])
+  userId        String
+  period        String     // "2026-08"
+  type          TargetType
+  targetValue   Int
+  achievedValue Int        @default(0)
+
+  @@unique([userId, period, type])
 }
 
 // Real referral/affiliate links Saathi already holds with partner banks

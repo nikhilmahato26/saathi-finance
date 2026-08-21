@@ -110,10 +110,20 @@ export async function markDocumentsComplete(leadId: string) {
   revalidatePath(`/dashboard/leads/${leadId}/application`);
 }
 
-export async function recordPayment(leadId: string, _prev: StationFormState, formData: FormData): Promise<StationFormState> {
+import { createRazorpayOrder, verifyRazorpaySignature } from "@/lib/razorpay";
+
+export async function initiateRazorpayPayment(leadId: string, amountInPaise: number) {
+  const { actorId } = await requireLeadAccess(leadId);
+  const order = await createRazorpayOrder(amountInPaise, leadId);
+  return { orderId: order.id, amount: order.amount };
+}
+
+export async function recordPayment(leadId: string, razorpayPaymentId: string, razorpayOrderId: string, razorpaySignature: string): Promise<StationFormState> {
   const { actorId, ip } = await requireLeadAccess(leadId);
-  const parsed = paymentSchema.safeParse(Object.fromEntries(formData));
-  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Check the form." };
+  
+  if (!verifyRazorpaySignature(razorpayOrderId, razorpayPaymentId, razorpaySignature)) {
+    return { error: "Invalid payment signature. Verification failed." };
+  }
 
   const lead = await db.lead.findUniqueOrThrow({
     where: { id: leadId },
@@ -131,7 +141,7 @@ export async function recordPayment(leadId: string, _prev: StationFormState, for
     customerName: lead.customer.name,
     customerMobile: lead.customer.mobile,
     fields,
-    paymentRef: parsed.data.paymentRef,
+    paymentRef: razorpayPaymentId,
   });
   const pdfUrl = await savePdf(leadId, `${lead.leadCode}.pdf`, pdfBytes);
 
@@ -139,7 +149,7 @@ export async function recordPayment(leadId: string, _prev: StationFormState, for
     where: { leadId },
     data: {
       processingFeePaid: true,
-      paymentRef: parsed.data.paymentRef,
+      paymentRef: razorpayPaymentId,
       paymentAmount: 295000, // paise
       pdfUrl,
       submittedAt: new Date(),

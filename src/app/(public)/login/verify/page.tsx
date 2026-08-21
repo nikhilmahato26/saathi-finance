@@ -8,19 +8,19 @@ import { verifyStaffOtp } from "./actions";
 export default async function StaffVerifyPage({
   searchParams,
 }: {
-  searchParams: Promise<{ mobile?: string; error?: string }>;
+  searchParams: Promise<{ mobile?: string; error?: string; code?: string }>;
 }) {
-  const { mobile = "", error } = await searchParams;
-  const isDev = process.env.NODE_ENV !== "production";
+  const { mobile = "", error, code } = await searchParams;
 
   return (
     <section className="mx-auto max-w-md px-4 py-16 sm:px-6">
       <h1 className="text-2xl font-semibold tracking-tight">Enter the code</h1>
       <p className="mt-2 text-sm text-muted-foreground">We sent a 6-digit code to {mobile}.</p>
-      {isDev && (
+      
+      {code && (
         <p className="mt-2 rounded-md border bg-muted px-3 py-2 text-xs text-muted-foreground">
-          Dev mode: the code is{" "}
-          <span className="font-mono font-semibold text-foreground">{DEV_FIXED_OTP}</span>.
+          Mock SMS: the code is{" "}
+          <span className="font-mono font-semibold text-foreground">{code}</span>.
         </p>
       )}
 
