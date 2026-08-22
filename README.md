@@ -33,6 +33,7 @@ No SMS provider is wired up yet. Every OTP is fixed to **`123456`** (`DEV_FIXED_
 **Auth & lead capture**
 - Mobile+OTP auth for both customers and staff, role on the JWT, role-gated `/dashboard/*` shell.
 - Public lead-capture flow (`/apply` → `/verify` → `/confirmation/[leadCode]`), auto-generated `SF-2026-XXXXXX` lead codes.
+- Customer Dashboard (`/dashboard/customer`) allowing applicants to track their application status in real-time.
 - Role-based sidebar nav, monochrome design system (no color/hue anywhere — status and emphasis are communicated via weight, fill inversion, and icons; see `src/app/globals.css`).
 
 **Home Loan — internal-application reference flow** (`/dashboard/leads/[leadId]/application`)
@@ -53,10 +54,14 @@ No SMS provider is wired up yet. Every OTP is fixed to **`123456`** (`DEV_FIXED_
 - Stations: owner & business info (name/GSTIN/vintage), turnover & income, existing obligations (EMI/running loans), loan requirement (amount/purpose), documents (ITR/GST/Bank Statement), eligibility & consent, referral — the last two stations directly reuse Personal Loan's `EligibilityStation`/`ReferralStation` components and schemas since the shape (consent + lender pick; reference number + screenshot) is identical.
 - Unlike Personal Loan, Business Loan has a Documents station (PRODUCT.md calls for ITR/GST/Bank Statement uploads) — advances through Documents Pending → Documents Complete the same way Home/Vehicle Loan do, which Personal Loan's flow doesn't need.
 
-**Admin**
+**Admin & Global UX**
 - Lead list/detail, manual status changes with `StatusHistoryEntry` + `ActivityLog` writes on every mutation.
 - Lenders CRUD (add lender, edit URL, activate/deactivate) at `/dashboard/admin/lenders`.
-- Role-scoped access enforced at the query layer, not just hidden in the UI: `requireLeadAccess(leadId, { canManage })` in `src/lib/lead-access.ts` — Admin/Manager can act on any lead; Employee/Partner only on leads assigned to or created by them (404, not just a hidden button, for anyone else).
+- Staff Directory (`/dashboard/admin/employees`) with add, promote (Employee to Manager), and demote capabilities.
+- Activity Log (`/dashboard/admin/activity`) providing a real-time audit trail of all system events.
+- Role-scoped access enforced at the query layer: `requireLeadAccess(leadId, { canManage })` in `src/lib/lead-access.ts` — Admin/Manager can act on any lead; Employee/Partner only on leads assigned to or created by them.
+- Managers can view and claim unassigned public leads from their dashboard.
+- Global UI enhancements: standard `SubmitButton` for all forms with pending states, and `nextjs-toploader` for page transitions.
 
 ## What's left
 
