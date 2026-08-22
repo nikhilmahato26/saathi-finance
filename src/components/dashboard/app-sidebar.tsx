@@ -47,7 +47,7 @@ const NAV_BY_ROLE: Record<Role, NavItem[]> = {
     { label: "My leads", href: "/dashboard/partner" },
     { label: "Referrals", href: "/dashboard/partner/referrals" },
   ],
-  CUSTOMER: [{ label: "My application", href: "/dashboard" }],
+  CUSTOMER: [{ label: "My application", href: "/dashboard/customer" }],
 };
 
 export function AppSidebar({ role }: { role: Role }) {

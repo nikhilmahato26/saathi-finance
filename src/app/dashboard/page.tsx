@@ -6,6 +6,7 @@ const ROLE_HOME: Record<string, string> = {
   MANAGER: "/dashboard/manager",
   EMPLOYEE: "/dashboard/employee",
   PARTNER: "/dashboard/partner",
+  CUSTOMER: "/dashboard/customer",
 };
 
 export default async function DashboardIndexPage() {

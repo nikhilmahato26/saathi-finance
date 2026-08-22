@@ -12,8 +12,8 @@ export const DEV_FIXED_OTP = "123456";
  * server console - swap this back to random-only once a provider is wired up.
  */
 export async function requestOtp(mobile: string): Promise<{ devCode?: string }> {
-  // Generate random 6-digit code for all environments now
-  const code = String(Math.floor(100000 + Math.random() * 900000));
+  const isDev = process.env.NODE_ENV !== "production";
+  const code = isDev ? DEV_FIXED_OTP : String(Math.floor(100000 + Math.random() * 900000));
   const expiresAt = new Date(Date.now() + OTP_TTL_MINUTES * 60 * 1000);
 
   await db.otpCode.create({ data: { mobile, code, expiresAt } });
