@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { SubmitButton } from "@/components/submit-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ProductSelectField } from "@/components/site/product-select-field";
@@ -47,9 +47,9 @@ export default async function ApplyPage({
 
         <ProductSelectField />
 
-        <Button type="submit" size="lg" className="mt-2">
-          Continue
-        </Button>
+        <SubmitButton size="lg" className="mt-2" loadingText="Sending code...">
+          Get started
+        </SubmitButton>
       </form>
     </section>
   );

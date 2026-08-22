@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { getProductOption, STATUS_LABELS } from "@/lib/products";
 import { StatusBadge } from "@/components/dashboard/status-badge";
 import { Button } from "@/components/ui/button";
+import { SubmitButton } from "@/components/submit-button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { StatusSelectField } from "@/components/dashboard/status-select-field";
@@ -96,9 +97,9 @@ export default async function LeadDetailPage({
             <h2 className="text-sm font-medium">Status</h2>
             <form action={changeStatusWithId} className="mt-3 flex flex-wrap items-end gap-3">
               <StatusSelectField currentStatus={lead.status} />
-              <Button type="submit" size="sm">
+              <SubmitButton size="sm" loadingText="Updating...">
                 Update status
-              </Button>
+              </SubmitButton>
             </form>
 
             {lead.statusHistory.length > 0 && (
@@ -145,9 +146,9 @@ export default async function LeadDetailPage({
                 Add a remark
               </Label>
               <Textarea id="text" name="text" placeholder="Add a remark..." rows={2} required />
-              <Button type="submit" size="sm" className="justify-self-start">
+              <SubmitButton size="sm" className="justify-self-start" loadingText="Adding...">
                 Add remark
-              </Button>
+              </SubmitButton>
             </form>
 
             {lead.notes.length > 0 ? (
@@ -190,9 +191,9 @@ export default async function LeadDetailPage({
                   employees={employees}
                   currentEmployeeId={lead.assignedToId ?? undefined}
                 />
-                <Button type="submit" size="sm">
+                <SubmitButton size="sm" loadingText="Assigning...">
                   Assign
-                </Button>
+                </SubmitButton>
               </form>
             )}
           </section>

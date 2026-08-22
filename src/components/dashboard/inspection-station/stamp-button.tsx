@@ -1,13 +1,11 @@
 "use client";
 
-import { useFormStatus } from "react-dom";
-import { Button } from "@/components/ui/button";
+import { SubmitButton } from "@/components/submit-button";
 
 export function StampButton({ label = "Stamp & continue" }: { label?: string }) {
-  const { pending } = useFormStatus();
   return (
-    <Button type="submit" disabled={pending}>
-      {pending ? "Saving..." : label}
-    </Button>
+    <SubmitButton loadingText="Saving...">
+      {label}
+    </SubmitButton>
   );
 }

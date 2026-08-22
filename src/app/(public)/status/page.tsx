@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { SubmitButton } from "@/components/submit-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
@@ -21,9 +21,9 @@ export default function StatusLookupPage() {
           <Label htmlFor="leadCode">Lead ID</Label>
           <Input id="leadCode" name="leadCode" placeholder="SF-2026-000001" required />
         </div>
-        <Button type="submit" size="lg">
+        <SubmitButton size="lg" loadingText="Checking...">
           Check status
-        </Button>
+        </SubmitButton>
       </form>
     </section>
   );

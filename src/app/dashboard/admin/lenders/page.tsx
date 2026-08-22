@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { Button } from "@/components/ui/button";
+import { SubmitButton } from "@/components/submit-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
@@ -46,9 +47,9 @@ export default async function LendersPage() {
                     defaultValue={lender.referralUrl ?? ""}
                   />
                 </div>
-                <Button type="submit" size="sm" variant="outline">
+                <SubmitButton size="sm" variant="outline" loadingText="Saving...">
                   Save
-                </Button>
+                </SubmitButton>
               </form>
 
               <div className="flex items-center gap-2 sm:justify-self-end">
@@ -56,9 +57,9 @@ export default async function LendersPage() {
                   {lender.active ? "Active" : "Inactive"}
                 </Badge>
                 <form action={toggleActive}>
-                  <Button type="submit" size="sm" variant="outline">
+                  <SubmitButton size="sm" variant="outline" loadingText="Toggling...">
                     {lender.active ? "Deactivate" : "Activate"}
-                  </Button>
+                  </SubmitButton>
                 </form>
               </div>
             </div>
@@ -87,9 +88,9 @@ export default async function LendersPage() {
             </Label>
             <Input id="referralUrl" name="referralUrl" type="url" placeholder="https://..." />
           </div>
-          <Button type="submit" size="sm">
+          <SubmitButton size="sm" loadingText="Adding...">
             Add lender
-          </Button>
+          </SubmitButton>
         </form>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { SubmitButton } from "@/components/submit-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { DEV_FIXED_OTP } from "@/lib/otp";
@@ -42,9 +42,9 @@ export default async function StaffVerifyPage({
           />
         </div>
 
-        <Button type="submit" size="lg">
+        <SubmitButton size="lg" loadingText="Confirming...">
           Confirm
-        </Button>
+        </SubmitButton>
       </form>
     </section>
   );

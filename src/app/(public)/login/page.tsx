@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { SubmitButton } from "@/components/submit-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FormError } from "@/components/form-error";
@@ -39,9 +39,9 @@ export default async function StaffLoginPage({
           />
         </div>
 
-        <Button type="submit" size="lg">
+        <SubmitButton size="lg" loadingText="Sending code...">
           Send code
-        </Button>
+        </SubmitButton>
       </form>
     </section>
   );
