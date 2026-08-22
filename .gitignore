@@ -46,3 +46,6 @@ next-env.d.ts
 
 # locally stored uploads (dev only - see src/lib/storage.ts)
 /public/uploads
+
+.playwright-mcp
+

@@ -3,7 +3,7 @@
 import { useActionState, useEffect, useRef } from "react";
 import { FormError } from "@/components/form-error";
 import { StampButton } from "./stamp-button";
-import { StampSeal } from "@/components/site/stamp-seal";
+import { LogoMark } from "@/components/site/logo-mark";
 import type { StationFormState } from "@/lib/station-form-state";
 import {
   VEHICLE_TYPES,
@@ -48,7 +48,7 @@ export function VehicleReviewStation({
   if (submitted) {
     return (
       <div className="grid max-w-lg gap-4 text-center">
-        <StampSeal className="mx-auto h-16 w-16 text-primary" />
+        <LogoMark className="mx-auto h-12 w-auto" />
         <h2 className="text-lg font-semibold">Application submitted</h2>
         <p className="text-sm text-muted-foreground">
           Record every real-world update (sanction, disbursement, rejection) with a manual status

@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FormError } from "@/components/form-error";
 import { StampButton } from "./stamp-button";
-import { StampSeal } from "@/components/site/stamp-seal";
+import { LogoMark } from "@/components/site/logo-mark";
 import type { StationFormState } from "@/lib/station-form-state";
 
 export function ReferralStation({
@@ -40,7 +40,7 @@ export function ReferralStation({
   if (sent) {
     return (
       <div className="grid max-w-lg gap-4 text-center">
-        <StampSeal className="mx-auto h-16 w-16 text-primary" />
+        <LogoMark className="mx-auto h-12 w-auto" />
         <h2 className="text-lg font-semibold">Referral recorded</h2>
         <p className="text-sm text-muted-foreground">
           Applied on {lenderName}&apos;s site. Reference: {referenceNumber}
