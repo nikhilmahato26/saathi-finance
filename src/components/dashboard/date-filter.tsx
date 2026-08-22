@@ -14,7 +14,8 @@ export function DateFilter({ currentRange, currentFrom, currentTo }: { currentRa
   const [from, setFrom] = useState(currentFrom || "");
   const [to, setTo] = useState(currentTo || "");
 
-  const handleRangeChange = (val: string) => {
+  const handleRangeChange = (val: string | null) => {
+    if (!val) return;
     if (val === "custom") {
       setIsCustom(true);
       return;

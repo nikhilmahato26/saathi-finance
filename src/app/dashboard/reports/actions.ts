@@ -38,7 +38,7 @@ export async function fetchReportData(filterGroup: FilterGroup, page = 1, pageSi
       customer: { select: { name: true, mobile: true } },
       application: {
         select: {
-          applicationNo: true,
+          id: true,
           fieldsJson: true,
         }
       }

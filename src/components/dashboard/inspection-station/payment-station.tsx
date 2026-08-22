@@ -57,7 +57,7 @@ export function PaymentStation({
               response.razorpay_order_id, 
               response.razorpay_signature
             );
-            if (result.error) {
+            if (result && "error" in result && result.error) {
               setError(result.error);
             } else {
               onSaved();
