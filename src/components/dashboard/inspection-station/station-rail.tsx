@@ -15,7 +15,7 @@ export function StationRail<K extends string>({
   onSelect: (station: K) => void;
 }) {
   return (
-    <nav className="grid gap-1 rounded-lg border p-2">
+    <nav className="grid gap-1 rounded-lg border p-2 self-start">
       {stations.map((station, index) => {
         const isCurrent = station.key === current;
         const isStamped = completed[station.key];
