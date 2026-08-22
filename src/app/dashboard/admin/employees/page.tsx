@@ -3,7 +3,7 @@ import { SubmitButton } from "@/components/submit-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { createStaff } from "./actions";
+import { createStaff, changeRole } from "./actions";
 
 export default async function EmployeesPage() {
   const staff = await db.user.findMany({
@@ -43,6 +43,14 @@ export default async function EmployeesPage() {
 
             <div className="text-sm text-muted-foreground">
               {user.manager ? `Reports to: ${user.manager.name}` : ""}
+            </div>
+
+            <div className="flex justify-end">
+              <form action={changeRole.bind(null, user.id, user.role === "MANAGER" ? "EMPLOYEE" : "MANAGER")}>
+                <SubmitButton size="sm" variant="outline" loadingText="Updating...">
+                  {user.role === "MANAGER" ? "Demote to Employee" : "Promote to Manager"}
+                </SubmitButton>
+              </form>
             </div>
           </div>
         ))}

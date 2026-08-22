@@ -49,3 +49,28 @@ export async function createStaff(formData: FormData) {
 
   revalidatePath("/dashboard/admin/employees");
 }
+
+export async function changeRole(userId: string, newRole: Role) {
+  const session = await auth();
+  if (session?.user?.role !== "ADMIN") {
+    throw new Error("Unauthorized");
+  }
+
+  if (newRole !== "EMPLOYEE" && newRole !== "MANAGER") {
+    throw new Error("Invalid role specified");
+  }
+
+  const data: { role: Role; managerId?: string | null } = { role: newRole };
+  
+  if (newRole === "MANAGER") {
+    // Managers should not have a manager assigned
+    data.managerId = null;
+  }
+
+  await db.user.update({
+    where: { id: userId },
+    data,
+  });
+
+  revalidatePath("/dashboard/admin/employees");
+}
