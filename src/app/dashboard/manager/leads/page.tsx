@@ -15,6 +15,7 @@ export default async function ManagerLeadsPage() {
       OR: [
         { assignedTo: { managerId } },
         { createdBy: { managerId } },
+        { assignedToId: null },
       ],
     },
     orderBy: { createdAt: "desc" },
