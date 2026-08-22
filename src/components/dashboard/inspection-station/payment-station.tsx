@@ -12,7 +12,7 @@ import {
   type StationFormState,
 } from "@/app/dashboard/leads/[leadId]/application/actions";
 import { PROCESSING_FEE_INR } from "@/lib/home-loan-schema";
-import { StampSeal } from "@/components/site/stamp-seal";
+import { LogoMark } from "@/components/site/logo-mark";
 
 export function PaymentStation({
   leadId,
@@ -86,7 +86,7 @@ export function PaymentStation({
   if (paid) {
     return (
       <div className="grid max-w-lg gap-4 text-center">
-        <StampSeal className="mx-auto h-16 w-16 text-primary" />
+        <LogoMark className="mx-auto h-12 w-auto" />
         <h2 className="text-lg font-semibold">Application sealed</h2>
         <p className="text-sm text-muted-foreground">
           Processing fee recorded (Ref: {paymentRef}). The application PDF has been generated.

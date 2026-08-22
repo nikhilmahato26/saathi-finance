@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { StampSeal } from "@/components/site/stamp-seal";
+import { LogoMark } from "@/components/site/logo-mark";
 import { db } from "@/lib/db";
 
 export default async function ConfirmationPage({
@@ -15,7 +15,7 @@ export default async function ConfirmationPage({
 
   return (
     <section className="mx-auto max-w-md px-4 py-20 text-center sm:px-6">
-      <StampSeal className="mx-auto h-20 w-20 text-primary" />
+      <LogoMark className="mx-auto h-14 w-auto" />
       <h1 className="mt-6 text-2xl font-semibold tracking-tight">
         Thanks. We&apos;ve got your details.
       </h1>

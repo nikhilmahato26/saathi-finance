@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { getProductOption } from "@/lib/products";
-import { StampSeal } from "@/components/site/stamp-seal";
+import { LogoMark } from "@/components/site/logo-mark";
 
 export default async function ReferralLandingPage({
   params,
@@ -16,7 +16,7 @@ export default async function ReferralLandingPage({
 
   return (
     <section className="mx-auto max-w-md px-4 py-16 text-center sm:px-6">
-      <StampSeal className="mx-auto h-16 w-16 text-primary" />
+      <LogoMark className="mx-auto h-12 w-auto" />
       <h1 className="mt-6 text-2xl font-semibold tracking-tight">
         You&apos;re being referred to {lead.lender ?? "a lender"}
       </h1>
