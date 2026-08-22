@@ -42,7 +42,7 @@ export async function GET(req: NextRequest) {
         assignedTo: { select: { name: true } },
         createdBy: { select: { name: true } },
         customer: { select: { name: true, mobile: true } },
-        application: { select: { applicationNo: true, fieldsJson: true } }
+        application: { select: { id: true, fieldsJson: true } }
       },
       orderBy: { createdAt: "desc" },
       take: 5000, // Reasonable limit for exports to prevent OOM
@@ -59,7 +59,7 @@ export async function GET(req: NextRequest) {
       { header: "Status", key: "status", width: 20 },
       { header: "Assigned Employee", key: "assignedTo", width: 20 },
       { header: "Created At", key: "createdAt", width: 15 },
-      { header: "Application No", key: "appNo", width: 20 },
+      { header: "Application ID", key: "appNo", width: 20 },
       { header: "Loan Amount", key: "amount", width: 15 },
     ];
 
@@ -68,14 +68,14 @@ export async function GET(req: NextRequest) {
       const amount = fields?.loanDetails?.amount || 0;
 
       worksheet.addRow({
-        id: lead.id,
+        id: lead.leadCode,
         customerName: lead.customer?.name || "",
         mobile: lead.customer?.mobile || "",
         product: lead.productType.replace(/_/g, ' '),
         status: lead.status.replace(/_/g, ' '),
         assignedTo: lead.assignedTo?.name || "Unassigned",
         createdAt: new Date(lead.createdAt).toLocaleDateString(),
-        appNo: lead.application?.applicationNo || "",
+        appNo: lead.application?.id || "",
         amount: amount,
       });
     });

@@ -102,9 +102,9 @@ export async function getBusinessKPIs(filters: DashboardFilters) {
     
     // In absence of specific sanction/disbursement amount fields, we use the applied amount
     // for leads that have reached or passed these stages.
-    const statusIndex = STATUS_PIPELINE_ORDER.indexOf(status);
-    const sanctionIndex = STATUS_PIPELINE_ORDER.indexOf("SANCTION");
-    const disbursementIndex = STATUS_PIPELINE_ORDER.indexOf("DISBURSEMENT");
+    const statusIndex = (STATUS_PIPELINE_ORDER as readonly string[]).indexOf(status);
+    const sanctionIndex = (STATUS_PIPELINE_ORDER as readonly string[]).indexOf("SANCTION");
+    const disbursementIndex = (STATUS_PIPELINE_ORDER as readonly string[]).indexOf("DISBURSEMENT");
 
     if (statusIndex >= sanctionIndex && status !== "REJECTED") {
       sanctionAmount += amount;
