@@ -40,12 +40,9 @@ const NAV_BY_ROLE: Record<Role, NavItem[]> = {
   ],
   EMPLOYEE: [
     { label: "My leads", href: "/dashboard/employee" },
-    { label: "Follow-ups due", href: "/dashboard/employee/follow-ups" },
-    { label: "My target", href: "/dashboard/employee/target" },
   ],
   PARTNER: [
     { label: "My leads", href: "/dashboard/partner" },
-    { label: "Referrals", href: "/dashboard/partner/referrals" },
   ],
   CUSTOMER: [{ label: "My application", href: "/dashboard/customer" }],
 };

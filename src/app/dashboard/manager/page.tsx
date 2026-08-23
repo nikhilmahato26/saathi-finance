@@ -49,7 +49,9 @@ function getDatesFromRange(range?: string, from?: string, to?: string) {
 
 async function DashboardMetrics({ searchParams }: { searchParams: { range?: string, from?: string, to?: string } }) {
   const session = await auth();
-  if (!session?.user) return null;
+  if (!session?.user || (session.user.role !== "MANAGER" && session.user.role !== "ADMIN")) {
+    return null;
+  }
   const { role, id } = session.user;
   
   const { startDate, endDate } = getDatesFromRange(searchParams.range, searchParams.from, searchParams.to);

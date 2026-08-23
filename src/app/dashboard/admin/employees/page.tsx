@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { SubmitButton } from "@/components/submit-button";
 import { Input } from "@/components/ui/input";
@@ -6,6 +8,9 @@ import { Badge } from "@/components/ui/badge";
 import { createStaff, changeRole } from "./actions";
 
 export default async function EmployeesPage() {
+  const session = await auth();
+  if (session?.user?.role !== "ADMIN") redirect("/login");
+
   const staff = await db.user.findMany({
     where: { role: { in: ["EMPLOYEE", "MANAGER"] } },
     orderBy: [{ role: "asc" }, { name: "asc" }],

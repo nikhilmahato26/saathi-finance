@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import type { Role, LeadStatus, TargetType } from "@/generated/prisma/client";
+import type { Role, LeadStatus } from "@/generated/prisma/client";
 import { STATUS_PIPELINE_ORDER } from "@/lib/products";
 
 export interface DashboardFilters {
@@ -34,6 +34,19 @@ function buildRoleFilter(actorId: string, role: Role) {
       OR: [{ assignedToId: actorId }, { createdById: actorId }],
     };
   }
+  return { id: "none" };
+}
+
+/**
+ * Role scope for queries over the User model itself (staff-performance
+ * dashboards), as opposed to buildRoleFilter's Lead-shaped where clause.
+ * Only ADMIN (unrestricted) and MANAGER (own team) should ever see other
+ * staff's performance data - every other role gets a filter that matches
+ * nothing, since Employee/Partner have no business seeing teammates' stats.
+ */
+function buildStaffRoleFilter(actorId: string, role: Role) {
+  if (role === "ADMIN") return {};
+  if (role === "MANAGER") return { managerId: actorId };
   return { id: "none" };
 }
 
@@ -148,7 +161,6 @@ export async function getProductPerformance(filters: DashboardFilters) {
 }
 
 export async function getRecentActivities(filters: DashboardFilters, take = 10) {
-  const roleFilter = buildRoleFilter(filters.actorId, filters.role);
   const dateFilter = buildDateFilter(filters.startDate, filters.endDate);
 
   return db.activityLog.findMany({
@@ -170,14 +182,13 @@ export async function getRecentActivities(filters: DashboardFilters, take = 10) 
 }
 
 export async function getEmployeePerformance(filters: DashboardFilters) {
-  const roleFilter = buildRoleFilter(filters.actorId, filters.role);
+  const staffRoleFilter = buildStaffRoleFilter(filters.actorId, filters.role);
   const dateFilter = buildDateFilter(filters.startDate, filters.endDate);
 
   const employees = await db.user.findMany({
     where: {
       role: "EMPLOYEE",
-      // Manager can only see their team
-      ...(filters.role === "MANAGER" ? { managerId: filters.actorId } : {}),
+      ...staffRoleFilter,
     },
     include: {
       leadsAssigned: {
@@ -217,12 +228,15 @@ export async function getEmployeePerformance(filters: DashboardFilters) {
 }
 
 export async function getPartnerPerformance(filters: DashboardFilters) {
-  // Similar to employee, but for PARTNER role
+  // Same role scope as getEmployeePerformance - only ADMIN (all) or MANAGER
+  // (own team) should see partner performance data.
+  const staffRoleFilter = buildStaffRoleFilter(filters.actorId, filters.role);
   const dateFilter = buildDateFilter(filters.startDate, filters.endDate);
 
   const partners = await db.user.findMany({
     where: {
       role: "PARTNER",
+      ...staffRoleFilter,
     },
     include: {
       leadsCreated: {

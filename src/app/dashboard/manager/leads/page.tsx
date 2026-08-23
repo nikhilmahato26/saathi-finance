@@ -6,7 +6,9 @@ import { EmptyState } from "@/components/dashboard/empty-state";
 
 export default async function ManagerLeadsPage() {
   const session = await auth();
-  if (!session?.user) redirect("/login");
+  if (!session?.user || (session.user.role !== "MANAGER" && session.user.role !== "ADMIN")) {
+    redirect("/login");
+  }
 
   const managerId = session.user.id;
 

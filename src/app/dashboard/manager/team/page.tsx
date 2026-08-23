@@ -13,7 +13,9 @@ import { EmptyState } from "@/components/dashboard/empty-state";
 
 export default async function ManagerTeamPage() {
   const session = await auth();
-  if (!session?.user) redirect("/login");
+  if (!session?.user || (session.user.role !== "MANAGER" && session.user.role !== "ADMIN")) {
+    redirect("/login");
+  }
 
   const team = await db.user.findMany({
     where: { managerId: session.user.id },

@@ -1,8 +1,13 @@
+import { redirect } from "next/navigation";
+import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { LeadsTable } from "@/components/dashboard/leads-table";
 import { EmptyState } from "@/components/dashboard/empty-state";
 
 export default async function AdminLeadsPage() {
+  const session = await auth();
+  if (session?.user?.role !== "ADMIN") redirect("/login");
+
   const leads = await db.lead.findMany({
     orderBy: { createdAt: "desc" },
     include: { customer: { select: { name: true } }, assignedTo: { select: { name: true } } },
