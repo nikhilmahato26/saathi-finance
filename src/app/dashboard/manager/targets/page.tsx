@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { calculateAchievements } from "@/lib/target-calculations";
@@ -6,7 +7,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default async function ManagerTargetsPage() {
   const session = await auth();
-  if (!session?.user) return null;
+  if (!session?.user || (session.user.role !== "MANAGER" && session.user.role !== "ADMIN")) {
+    redirect("/login");
+  }
   const period = "2026-08"; // Hardcoded for demo/current period
 
   const team = await db.user.findMany({
