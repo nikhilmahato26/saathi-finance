@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { LeadsTable } from "@/components/dashboard/leads-table";
 import { EmptyState } from "@/components/dashboard/empty-state";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 
 export default async function ManagerLeadsPage() {
@@ -39,12 +39,10 @@ export default async function ManagerLeadsPage() {
             All leads assigned to or created by your team members.
           </p>
         </div>
-        <Button asChild>
-          <Link href="/dashboard/leads/new">
-            <Plus className="mr-2 h-4 w-4" />
-            New Lead
-          </Link>
-        </Button>
+        <Link href="/dashboard/leads/new" className={buttonVariants()}>
+          <Plus className="mr-2 h-4 w-4" />
+          New Lead
+        </Link>
       </div>
 
       {leads.length > 0 ? (

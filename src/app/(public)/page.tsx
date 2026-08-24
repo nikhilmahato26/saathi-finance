@@ -36,7 +36,8 @@ import { Marquee } from "@/components/site/marquee";
 import { FloatingMarks } from "@/components/site/floating-marks";
 import { Reveal } from "@/components/site/reveal";
 import { SealRing } from "@/components/site/seal-ring";
-import { HeroLoanWidget, EmiCalculatorSection } from "@/components/site/emi-calculator";
+import { EmiCalculatorSection } from "@/components/site/emi-calculator";
+import { HeroVisual } from "@/components/site/hero-visual";
 import { ApplicationStack } from "@/components/site/application-stack";
 import { ProductOrbit } from "@/components/site/product-orbit";
 import { DrawLine } from "@/components/site/draw-line";
@@ -184,6 +185,10 @@ export default function HomePage() {
         </div>
         <div className="relative mx-auto grid max-w-7xl gap-12 px-4 pt-16 pb-20 sm:px-6 lg:grid-cols-2 lg:items-center lg:gap-16 lg:pt-24 lg:pb-28">
           <div>
+            <div className="inline-flex items-center gap-2 rounded-full border bg-secondary/80 px-3.5 py-1 text-xs font-medium text-foreground mb-6 shadow-sm">
+              <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span>Assisted Loans &middot; Insurance &middot; Tax &middot; Banking</span>
+            </div>
             <h1 className="animate-rise-in text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">
               Share your details. We&apos;ll handle the rest.
             </h1>
@@ -209,11 +214,21 @@ export default function HomePage() {
                 render={<Link href="/status">Track your application</Link>}
               />
             </div>
+            <div className="mt-8 flex flex-wrap items-center gap-6 text-xs text-muted-foreground">
+              <span className="flex items-center gap-1.5 font-medium text-foreground">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                Callback within 24 hours
+              </span>
+              <span className="flex items-center gap-1.5">
+                &bull; Zero paperwork stress
+              </span>
+              <span className="flex items-center gap-1.5">
+                &bull; 100% Tracked pipeline
+              </span>
+            </div>
           </div>
           <div className="flex justify-center lg:justify-end">
-            <div className="animate-hero-settle rotate-2 transition-transform duration-500 hover:rotate-0">
-              <HeroLoanWidget />
-            </div>
+            <HeroVisual />
           </div>
         </div>
 
