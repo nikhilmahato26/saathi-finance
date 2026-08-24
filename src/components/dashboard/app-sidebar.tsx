@@ -26,6 +26,7 @@ const NAV_BY_ROLE: Record<Role, NavItem[]> = {
     { label: "Overview", href: "/dashboard/admin" },
     { label: "All leads", href: "/dashboard/admin/leads" },
     { label: "Employees", href: "/dashboard/admin/employees" },
+    { label: "Targets", href: "/dashboard/admin/targets" },
     { label: "Partners", href: "/dashboard/admin/partners" },
     { label: "Lenders", href: "/dashboard/admin/lenders" },
     { label: "Reports", href: "/dashboard/reports" },
@@ -40,6 +41,7 @@ const NAV_BY_ROLE: Record<Role, NavItem[]> = {
   ],
   EMPLOYEE: [
     { label: "My leads", href: "/dashboard/employee" },
+    { label: "My targets", href: "/dashboard/employee/targets" },
   ],
   PARTNER: [
     { label: "My leads", href: "/dashboard/partner" },
