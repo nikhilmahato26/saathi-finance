@@ -3,6 +3,9 @@ import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { LeadsTable } from "@/components/dashboard/leads-table";
 import { EmptyState } from "@/components/dashboard/empty-state";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 
 export default async function AdminLeadsPage() {
   const session = await auth();
@@ -15,11 +18,19 @@ export default async function AdminLeadsPage() {
 
   return (
     <div className="grid gap-6">
-      <div>
-        <h1 className="text-xl font-semibold tracking-tight">All leads</h1>
-        <p className="text-sm text-muted-foreground">
-          Every lead across every product, employee, and partner.
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-semibold tracking-tight">All leads</h1>
+          <p className="text-sm text-muted-foreground">
+            Every lead across every product, employee, and partner.
+          </p>
+        </div>
+        <Button asChild>
+          <Link href="/dashboard/leads/new">
+            <Plus className="mr-2 h-4 w-4" />
+            New Lead
+          </Link>
+        </Button>
       </div>
 
       {leads.length > 0 ? (
