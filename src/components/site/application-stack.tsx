@@ -1,7 +1,6 @@
 "use client";
 
-import { CheckCircle2, FileCheck, Shield, Sparkles, UserCheck } from "lucide-react";
-import { LogoMark } from "@/components/site/logo-mark";
+import { CheckCircle2, FileCheck } from "lucide-react";
 import { useInView } from "@/components/site/reveal";
 import { cn } from "@/lib/utils";
 

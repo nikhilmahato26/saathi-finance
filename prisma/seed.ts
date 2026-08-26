@@ -34,17 +34,23 @@ async function main() {
     create: { mobile: "9820011226", name: "Divyam", role: "PARTNER" },
   });
 
-  await db.lender.upsert({
-    where: { slug: "HDFC" },
-    update: {},
-    create: { slug: "HDFC", name: "HDFC Bank", referralUrl: null },
-  });
+  const lendersToSeed = [
+    { slug: "IFFCO_KISAN", name: "IFFCO Kisan Finance" },
+    { slug: "SK_FINANCE", name: "SK Finance" },
+    { slug: "DMI_HOUSING", name: "DMI Housing Finance" },
+    { slug: "AAVAS", name: "Aavas Financiers" },
+    { slug: "GRIHUM", name: "Grihum Housing Finance" },
+    { slug: "AADHAR_HOUSING", name: "Aadhar Housing Finance" },
+    { slug: "CAPRI_GLOBAL", name: "Capri Global Housing Finance" },
+  ];
 
-  await db.lender.upsert({
-    where: { slug: "ICICI" },
-    update: {},
-    create: { slug: "ICICI", name: "ICICI Bank", referralUrl: null },
-  });
+  for (const lender of lendersToSeed) {
+    await db.lender.upsert({
+      where: { slug: lender.slug },
+      update: { name: lender.name },
+      create: { slug: lender.slug, name: lender.name, referralUrl: null },
+    });
+  }
 
   console.log("Seeded roles. Admin:", admin.mobile);
 }

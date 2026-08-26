@@ -42,6 +42,10 @@ import { ApplicationStack } from "@/components/site/application-stack";
 import { ProductOrbit } from "@/components/site/product-orbit";
 import { DrawLine } from "@/components/site/draw-line";
 import { StatusPipeline } from "@/components/site/status-pipeline";
+import {
+  TrustedPartnersSection,
+  TrustedPartnersTicker,
+} from "@/components/site/trusted-partners";
 import { Faq3 } from "@/components/ui/faq3";
 import { STATUS_LABELS, STATUS_PIPELINE_ORDER } from "@/lib/products";
 
@@ -245,6 +249,9 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Authorized Lending Partners Top Ticker */}
+      <TrustedPartnersTicker />
+
       {/* Trust pillars + application-stack visual */}
       <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-28">
         <div className="grid gap-14 lg:grid-cols-2 lg:items-center lg:gap-20">
@@ -309,6 +316,11 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Dedicated Trusted Partners Section */}
+      <div className="border-t">
+        <TrustedPartnersSection />
+      </div>
 
       {/* Stat rings, sample data, clearly labeled */}
       <section 
