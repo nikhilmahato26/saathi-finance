@@ -79,63 +79,17 @@ export function IffcoKisanLogo({ className, mono }: { className?: string; mono?:
 
 /**
  * 2. SK FINANCE Logo
- * Exact recreation of the official logo: Iconic green lowercase 's' + tall indigo lowercase 'k',
- * with bold uppercase "FINANCE" underneath and tagline support.
+ * Official logo image: Iconic green lowercase 's' + royal indigo 'k' with bold "FINANCE".
  */
 export function SkFinanceLogo({ className, mono }: { className?: string; mono?: boolean }) {
   return (
-    <svg
-      viewBox="0 0 170 82"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={cn("h-10 w-auto", className)}
-      aria-label="SK Finance Logo"
-    >
-      {/* Dynamic 's' in Vibrant Green */}
-      <g transform="translate(18, 32)">
-        <path
-          d="M10 26.5C18.5 26.5 25.5 24 30.5 20.2L27 14.5C23 17.5 17.5 19.8 11.5 19.8C6.5 19.8 3.5 17.5 3.5 14.5C3.5 11.5 6.5 9.8 13.5 7.8C23.5 5 29 2 29 -5C29 -12.5 22.5 -17.5 11.5 -17.5C4.5 -17.5 -1.5 -15.2 -6 -11.5L-2.5 -5.8C1.5 -8.5 6.5 -10.8 11.5 -10.8C16.5 -10.8 19.5 -8.8 19.5 -5.8C19.5 -2.5 16.5 -0.8 9.5 1.2C-0.5 4 -6 7.5 -6 14.8C-6 22.8 1 26.5 10 26.5Z"
-          fill={mono ? "currentColor" : "#009639"}
-        />
-      </g>
-
-      {/* Dynamic 'k' in Deep Royal Indigo */}
-      <g transform="translate(68, 6)">
-        {/* Tall vertical pillar */}
-        <rect
-          x="0"
-          y="0"
-          width="16"
-          height="53"
-          rx="2.5"
-          fill={mono ? "currentColor" : "#28236B"}
-        />
-        {/* Upper diagonal arm */}
-        <path
-          d="M16 28L39 7H55L28 32Z"
-          fill={mono ? "currentColor" : "#28236B"}
-        />
-        {/* Lower diagonal leg */}
-        <path
-          d="M24 27L53 53H36L16 35Z"
-          fill={mono ? "currentColor" : "#28236B"}
-        />
-      </g>
-
-      {/* FINANCE Wordmark underneath */}
-      <text
-        x="64"
-        y="73"
-        textAnchor="middle"
-        fill={mono ? "currentColor" : "#111827"}
-        fontFamily="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
-        fontWeight="900"
-        fontSize="17.5"
-        letterSpacing="0.08em"
-      >
-        FINANCE
-      </text>
-    </svg>
+    <Image
+      src="/images/sk-finance-logo.png"
+      alt="SK Finance Logo"
+      width={164}
+      height={114}
+      className={cn("h-10 w-auto object-contain", mono && "grayscale opacity-75", className)}
+    />
   );
 }
 
