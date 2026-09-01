@@ -3,10 +3,15 @@ import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { LeadsTable } from "@/components/dashboard/leads-table";
 import { EmptyState } from "@/components/dashboard/empty-state";
+import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 
 export default async function ManagerLeadsPage() {
   const session = await auth();
-  if (!session?.user) redirect("/login");
+  if (!session?.user || (session.user.role !== "MANAGER" && session.user.role !== "ADMIN")) {
+    redirect("/login");
+  }
 
   const managerId = session.user.id;
 
@@ -27,11 +32,17 @@ export default async function ManagerLeadsPage() {
 
   return (
     <div className="grid gap-6">
-      <div>
-        <h1 className="text-xl font-semibold tracking-tight">Team leads</h1>
-        <p className="text-sm text-muted-foreground">
-          All leads assigned to or created by your team members.
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-semibold tracking-tight">Team leads</h1>
+          <p className="text-sm text-muted-foreground">
+            All leads assigned to or created by your team members.
+          </p>
+        </div>
+        <Link href="/dashboard/leads/new" className={buttonVariants()}>
+          <Plus className="mr-2 h-4 w-4" />
+          New Lead
+        </Link>
       </div>
 
       {leads.length > 0 ? (

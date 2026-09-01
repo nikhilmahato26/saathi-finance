@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { Users, FileText, CheckCircle, Banknote, XCircle, PauseCircle } from "lucide-react";
+import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { EmptyState } from "@/components/dashboard/empty-state";
@@ -33,6 +35,9 @@ async function getStats() {
 }
 
 export default async function AdminOverviewPage() {
+  const session = await auth();
+  if (session?.user?.role !== "ADMIN") redirect("/login");
+
   const stats = await getStats();
 
   return (

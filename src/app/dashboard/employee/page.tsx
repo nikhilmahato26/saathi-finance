@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { Users, FileClock, CheckCircle, Banknote } from "lucide-react";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
@@ -7,7 +8,10 @@ import { LeadsTable } from "@/components/dashboard/leads-table";
 
 export default async function EmployeeOverviewPage() {
   const session = await auth();
-  const employeeId = session!.user.id;
+  if (!session?.user || (session.user.role !== "EMPLOYEE" && session.user.role !== "ADMIN")) {
+    redirect("/login");
+  }
+  const employeeId = session.user.id;
 
   const [myLeads, statusCounts] = await Promise.all([
     db.lead.findMany({

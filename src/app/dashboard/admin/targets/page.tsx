@@ -7,19 +7,21 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { TargetForm } from "@/components/dashboard/target-form";
 import { Badge } from "@/components/ui/badge";
 
-export default async function ManagerTargetsPage() {
+export default async function AdminTargetsPage() {
   const session = await auth();
-  if (!session?.user || (session.user.role !== "MANAGER" && session.user.role !== "ADMIN")) {
+  if (session?.user?.role !== "ADMIN") {
     redirect("/login");
   }
+  
   const period = "2026-08"; // Hardcoded for demo/current period
 
-  const team = await db.user.findMany({
-    where: { managerId: session.user.id }
+  const staff = await db.user.findMany({
+    where: { role: { in: ["EMPLOYEE", "MANAGER"] } },
+    orderBy: [{ role: "asc" }, { name: "asc" }]
   });
 
   const achievements = await Promise.all(
-    team.map(async (member) => {
+    staff.map(async (member) => {
       const stats = await calculateAchievements(member.id, period);
       return { member, stats };
     })
@@ -28,12 +30,12 @@ export default async function ManagerTargetsPage() {
   return (
     <div className="grid gap-6">
       <div>
-        <h1 className="text-xl font-semibold tracking-tight">Team Targets</h1>
-        <p className="text-sm text-muted-foreground">Monitor your team&apos;s target achievements for {period}.</p>
+        <h1 className="text-xl font-semibold tracking-tight">Staff Targets</h1>
+        <p className="text-sm text-muted-foreground">Manage and monitor targets for all employees and managers for {period}.</p>
       </div>
 
       {achievements.length === 0 ? (
-        <Card><CardContent className="pt-6">No team members found.</CardContent></Card>
+        <Card><CardContent className="pt-6">No staff members found.</CardContent></Card>
       ) : (
         achievements.map(({ member, stats }) => (
           <Card key={member.id}>
