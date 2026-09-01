@@ -60,7 +60,7 @@ const defaultFaqItems: FaqItem[] = [
 
 const Faq3 = ({
   heading = "Frequently asked questions",
-  description = "Find answers to common questions about our loan and financial tracking services. Can't find what you're looking for? Reach out to our advisor team.",
+  description = "Find answers to common questions about our loan and financial tracking services. Can't find what you're looking for? Reach out to our advisor team on WhatsApp (7247580309).",
   items = defaultFaqItems,
 }: Faq3Props) => {
   return (

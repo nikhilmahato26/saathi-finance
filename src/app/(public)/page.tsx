@@ -379,35 +379,73 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Testimonials */}
+      {/* About Us */}
       <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-28">
-        <Reveal>
-          <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-            What people say
-          </h2>
-          <p className="mt-4 max-w-[56ch] text-muted-foreground">
-            Real stories from borrowers and clients who tracked and completed their loans with Saathi Finance.
-          </p>
-        </Reveal>
-        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {TESTIMONIALS.map((t, i) => (
-            <Reveal key={t.name} delay={i * 100}>
-              <figure className="h-full rounded-xl border bg-card p-6">
-                <blockquote className="text-sm leading-relaxed text-foreground">
-                  &ldquo;{t.quote}&rdquo;
-                </blockquote>
-                <figcaption className="mt-6 flex items-center gap-3">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-foreground text-xs font-medium text-background">
-                    {t.initials}
-                  </span>
-                  <div>
-                    <p className="text-sm font-medium">{t.name}</p>
-                    <p className="text-xs text-muted-foreground">{t.role} &middot; Verified</p>
-                  </div>
-                </figcaption>
-              </figure>
-            </Reveal>
-          ))}
+        <div className="grid gap-14 lg:grid-cols-2 lg:items-center lg:gap-20">
+          <Reveal>
+            <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+              About Us
+            </h2>
+            <p className="mt-6 text-lg text-muted-foreground leading-relaxed">
+              Saathi Finance was established with a vision to simplify the lending and financial services landscape for the Indian retail market. We understand that applying for loans, insurance, or managing taxes can be complex and time-consuming.
+            </p>
+            <p className="mt-4 text-lg text-muted-foreground leading-relaxed">
+              Under the leadership of our Founder and CEO, <strong>Virendra Singh</strong>, our goal is to bring transparency and dedicated support to every step of your financial journey. By assigning a personal advisor to your file and tracking every stage visibly, we ensure that nothing happens in the dark.
+            </p>
+            <p className="mt-8 text-base font-medium">
+              Have questions? Reach out to us on WhatsApp at {" "}
+              <a href="https://wa.me/917247580309" className="text-foreground underline underline-offset-4 hover:text-muted-foreground transition-colors" target="_blank" rel="noopener noreferrer">7247580309</a>
+            </p>
+          </Reveal>
+          <Reveal delay={150}>
+            <div className="relative h-[400px] w-full max-w-md mx-auto overflow-hidden rounded-2xl border shadow-sm">
+              {/* Note: In a real app, replace this src with a real image of Virendra Singh */}
+              <img
+                src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=2000&auto=format&fit=crop"
+                alt="Virendra Singh, Founder and CEO of Saathi Finance"
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+              <div className="absolute bottom-0 left-0 p-6">
+                <p className="text-xl font-semibold text-white">Virendra Singh</p>
+                <p className="text-sm font-medium text-white/80 mt-1">Founder & CEO</p>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="border-t bg-secondary/20">
+        <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-28">
+          <Reveal>
+            <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+              What people say
+            </h2>
+            <p className="mt-4 max-w-[56ch] text-muted-foreground">
+              Real stories from borrowers and clients who tracked and completed their loans with Saathi Finance.
+            </p>
+          </Reveal>
+          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {TESTIMONIALS.map((t, i) => (
+              <Reveal key={t.name} delay={i * 100}>
+                <figure className="h-full rounded-xl border bg-card p-6">
+                  <blockquote className="text-sm leading-relaxed text-foreground">
+                    &ldquo;{t.quote}&rdquo;
+                  </blockquote>
+                  <figcaption className="mt-6 flex items-center gap-3">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-foreground text-xs font-medium text-background">
+                      {t.initials}
+                    </span>
+                    <div>
+                      <p className="text-sm font-medium">{t.name}</p>
+                      <p className="text-xs text-muted-foreground">{t.role} &middot; Verified</p>
+                    </div>
+                  </figcaption>
+                </figure>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 
