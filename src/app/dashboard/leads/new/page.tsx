@@ -11,7 +11,7 @@ export default async function NewLeadPage() {
   if (!session?.user) redirect("/login");
   
   const role = session.user.role;
-  if (role !== "ADMIN" && role !== "MANAGER") {
+  if (role !== "ADMIN" && role !== "MANAGER" && role !== "EMPLOYEE") {
     redirect("/dashboard");
   }
 
@@ -19,7 +19,7 @@ export default async function NewLeadPage() {
     <section className="mx-auto max-w-md px-4 py-8 sm:px-6">
       <h1 className="text-2xl font-semibold tracking-tight">Create New Lead</h1>
       <p className="mt-2 text-sm text-muted-foreground">
-        Manually enter a customer's details to start a new application.
+        Manually enter a customer&apos;s details to start a new application.
       </p>
 
       <form action={createManualLead} className="mt-8 grid gap-6">

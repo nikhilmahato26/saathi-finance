@@ -25,6 +25,7 @@ declare module "next-auth" {
  * extends it with the actual provider for route handlers and server code.
  */
 export default {
+  secret: process.env.AUTH_SECRET,
   session: { strategy: "jwt" },
   pages: { signIn: "/login" },
   providers: [],

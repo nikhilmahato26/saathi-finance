@@ -41,6 +41,7 @@ const NAV_BY_ROLE: Record<Role, NavItem[]> = {
   ],
   EMPLOYEE: [
     { label: "My leads", href: "/dashboard/employee" },
+    { label: "New lead", href: "/dashboard/leads/new" },
     { label: "My targets", href: "/dashboard/employee/targets" },
   ],
   PARTNER: [

@@ -11,7 +11,7 @@ export async function createManualLead(formData: FormData) {
   if (!session?.user) throw new Error("Unauthorized");
   
   const role = session.user.role;
-  if (role !== "ADMIN" && role !== "MANAGER") {
+  if (role !== "ADMIN" && role !== "MANAGER" && role !== "EMPLOYEE") {
     throw new Error("Unauthorized");
   }
 
@@ -43,7 +43,7 @@ export async function createManualLead(formData: FormData) {
       source: "DIRECT",
       customerId: customer.id,
       createdById: session.user.id,
-      assignedToId: role === "MANAGER" ? session.user.id : null,
+      assignedToId: role === "EMPLOYEE" || role === "MANAGER" ? session.user.id : null,
     },
   });
 

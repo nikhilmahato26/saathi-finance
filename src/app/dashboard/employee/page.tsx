@@ -1,7 +1,9 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Users, FileClock, CheckCircle, Banknote } from "lucide-react";
+import { Users, FileClock, CheckCircle, Banknote, Plus } from "lucide-react";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
+import { buttonVariants } from "@/components/ui/button";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { EmptyState } from "@/components/dashboard/empty-state";
 import { LeadsTable } from "@/components/dashboard/leads-table";
@@ -13,13 +15,17 @@ export default async function EmployeeOverviewPage() {
   }
   const employeeId = session.user.id;
 
+  const leadFilter = {
+    OR: [{ assignedToId: employeeId }, { createdById: employeeId }],
+  };
+
   const [myLeads, statusCounts] = await Promise.all([
     db.lead.findMany({
-      where: { assignedToId: employeeId },
+      where: leadFilter,
       orderBy: { createdAt: "desc" },
       include: { customer: { select: { name: true } }, assignedTo: { select: { name: true } } },
     }),
-    db.lead.groupBy({ by: ["status"], where: { assignedToId: employeeId }, _count: true }),
+    db.lead.groupBy({ by: ["status"], where: leadFilter, _count: true }),
   ]);
 
   const byStatus = Object.fromEntries(
@@ -30,11 +36,17 @@ export default async function EmployeeOverviewPage() {
 
   return (
     <div className="grid gap-6">
-      <div>
-        <h1 className="text-xl font-semibold tracking-tight">My leads</h1>
-        <p className="text-sm text-muted-foreground">
-          Applications you&apos;re entering and moving forward.
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-semibold tracking-tight">My leads</h1>
+          <p className="text-sm text-muted-foreground">
+            Applications you&apos;re entering and moving forward.
+          </p>
+        </div>
+        <Link href="/dashboard/leads/new" className={buttonVariants()}>
+          <Plus className="mr-2 h-4 w-4" />
+          New Lead
+        </Link>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
