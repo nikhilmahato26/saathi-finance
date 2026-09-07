@@ -34,7 +34,14 @@ export default async function PartnersPage() {
           <div key={partner.id} className="grid gap-3 p-4 sm:grid-cols-[2fr_1fr] sm:items-center">
             <div>
               <p className="font-medium">{partner.name}</p>
-              <p className="font-mono text-xs text-muted-foreground">{partner.mobile}</p>
+              <div className="flex items-center gap-2 font-mono text-xs text-muted-foreground">
+                {partner.employeeId && (
+                  <span className="rounded bg-muted px-1.5 py-0.5 font-semibold text-foreground">
+                    {partner.employeeId}
+                  </span>
+                )}
+                <span>{partner.mobile}</span>
+              </div>
             </div>
 
             <div className="text-sm text-muted-foreground sm:text-right">
@@ -51,7 +58,7 @@ export default async function PartnersPage() {
 
       <div className="rounded-lg border p-4">
         <h2 className="text-sm font-medium">Add partner</h2>
-        <form action={createPartner} className="mt-3 grid gap-3 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
+        <form action={createPartner} className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_1fr_auto] sm:items-end">
           <div className="grid gap-1.5">
             <Label htmlFor="name" className="text-xs text-muted-foreground">
               Full Name
@@ -60,10 +67,24 @@ export default async function PartnersPage() {
           </div>
 
           <div className="grid gap-1.5">
+            <Label htmlFor="employeeId" className="text-xs text-muted-foreground">
+              Partner ID (Optional)
+            </Label>
+            <Input id="employeeId" name="employeeId" placeholder="PTR002" />
+          </div>
+
+          <div className="grid gap-1.5">
             <Label htmlFor="mobile" className="text-xs text-muted-foreground">
               Mobile Number
             </Label>
             <Input id="mobile" name="mobile" type="tel" placeholder="9876543210" required />
+          </div>
+
+          <div className="grid gap-1.5">
+            <Label htmlFor="password" className="text-xs text-muted-foreground">
+              Password
+            </Label>
+            <Input id="password" name="password" type="password" placeholder="password123" />
           </div>
 
           <SubmitButton size="sm" loadingText="Adding...">

@@ -4,13 +4,14 @@ Covers everything built through Phase 2: auth, lead capture, Home Loan, Personal
 Vehicle Loan, Business Loan, Admin, and role-scope. See [README.md](./README.md) for
 setup and [PRODUCT.md](./PRODUCT.md) for the product record.
 
-**OTP for everyone in dev is fixed: `123456`** (shown on screen, no log lookup needed).
+**Customer OTP in dev is fixed: `123456`** (shown on screen, no log lookup needed).
+**Staff login uses Employee ID and Password (default: `password123`)**.
 
 Seeded staff accounts:
-- Admin — `9820011223`
-- Manager — `9820011224` (Viplav)
-- Employee — `9820011225` (Kanhaiya)
-- Partner — `9820011226` (Divyam)
+- Admin — Employee ID `ADMIN001` (or mobile `9820011223`), password `password123`
+- Manager — Employee ID `MGR001` (or mobile `9820011224`, Viplav), password `password123`
+- Employee — Employee ID `EMP001` (or mobile `9820011225`, Kanhaiya), password `password123`
+- Partner — Employee ID `PTR001` (or mobile `9820011226`, Divyam), password `password123`
 
 ---
 
@@ -27,12 +28,12 @@ Seeded staff accounts:
 
 ## 2. Staff login
 
-- [ ] `/login` → mobile `9820011225` (Kanhaiya, Employee) → OTP `123456` → lands on `/dashboard`
+- [ ] `/login` → Employee ID `EMP001` (or mobile `9820011225`), password `password123` → lands on `/dashboard`
 - [ ] Sidebar nav is role-scoped (Employee shouldn't see Admin-only items like Lenders)
 
 ## 3. Admin setup (needed before testing referral flows)
 
-- [ ] Log out, log back in as Admin — `9820011223`
+- [ ] Log out, log back in as Admin — Employee ID `ADMIN001`, password `password123`
 - [ ] `/dashboard/admin/leads` → find your two new test leads → assign both to Kanhaiya (Employee)
 - [ ] `/dashboard/admin/lenders` → confirm HDFC Bank / ICICI Bank exist
 - [ ] Set a dummy `referralUrl` on one (e.g. `https://example.com`) to test the "Open {Lender}'s application" link

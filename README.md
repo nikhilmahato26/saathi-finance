@@ -19,19 +19,17 @@ Stack: Next.js 16 (App Router, Turbopack) + React 19 + TypeScript strict + Prism
 
 ## Auth in dev
 
-No SMS provider is wired up yet. Every OTP is fixed to **`123456`** (`DEV_FIXED_OTP` in `src/lib/otp.ts`), shown directly on screen — no server-log lookup needed. Swap to random-only once a real SMS provider is picked (see Undecided list in PRODUCT.md).
-
-- **Customers**: `/apply` → basic details + OTP → `/confirmation/[leadCode]`. Read-only tracker at `/status/[leadCode]`.
-- **Staff**: `/login` → mobile + OTP (`123456`) → `/dashboard`. Seeded accounts:
-  - Admin — `9820011223` (Admin)
-  - Manager — `9820011224` (Viplav)
-  - Employee — `9820011225` (Kanhaiya)
-  - Partner — `9820011226` (Divyam)
+- **Customers**: `/apply` → basic details + OTP (`123456`) → `/confirmation/[leadCode]`. Read-only tracker at `/status/[leadCode]`.
+- **Staff**: `/login` → Employee ID + Password (`password123`) → `/dashboard`. (Registered mobile number also accepted as ID). Seeded accounts:
+  - Admin — `ADMIN001` (`9820011223`)
+  - Manager — `MGR001` (`9820011224`, Viplav)
+  - Employee — `EMP001` (`9820011225`, Kanhaiya)
+  - Partner — `PTR001` (`9820011226`, Divyam)
 
 ## What's built
 
 **Auth & lead capture**
-- Mobile+OTP auth for both customers and staff, role on the JWT, role-gated `/dashboard/*` shell.
+- Employee ID & Password auth for staff (no OTP required); mobile+OTP verification for public customer lead capture; role on JWT; role-gated `/dashboard/*` shell.
 - Public lead-capture flow (`/apply` → `/verify` → `/confirmation/[leadCode]`), auto-generated `SF-2026-XXXXXX` lead codes.
 - Customer Dashboard (`/dashboard/customer`) allowing applicants to track their application status in real-time.
 - Role-based sidebar nav, monochrome design system (no color/hue anywhere — status and emphasis are communicated via weight, fill inversion, and icons; see `src/app/globals.css`).

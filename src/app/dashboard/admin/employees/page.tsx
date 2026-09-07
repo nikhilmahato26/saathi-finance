@@ -37,7 +37,14 @@ export default async function EmployeesPage() {
           <div key={user.id} className="grid gap-3 p-4 sm:grid-cols-[2fr_1fr_1fr_auto] sm:items-center">
             <div>
               <p className="font-medium">{user.name}</p>
-              <p className="font-mono text-xs text-muted-foreground">{user.mobile}</p>
+              <div className="flex items-center gap-2 font-mono text-xs text-muted-foreground">
+                {user.employeeId && (
+                  <span className="rounded bg-muted px-1.5 py-0.5 font-semibold text-foreground">
+                    {user.employeeId}
+                  </span>
+                )}
+                <span>{user.mobile}</span>
+              </div>
             </div>
             
             <div>
@@ -68,12 +75,19 @@ export default async function EmployeesPage() {
 
       <div className="rounded-lg border p-4">
         <h2 className="text-sm font-medium">Add staff member</h2>
-        <form action={createStaff} className="mt-3 grid gap-3 sm:grid-cols-[1fr_1fr_1fr_1fr_auto] sm:items-end">
+        <form action={createStaff} className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-[1.2fr_1fr_1fr_1fr_1fr_1fr_auto] sm:items-end">
           <div className="grid gap-1.5">
             <Label htmlFor="name" className="text-xs text-muted-foreground">
               Full Name
             </Label>
             <Input id="name" name="name" placeholder="John Doe" required />
+          </div>
+
+          <div className="grid gap-1.5">
+            <Label htmlFor="employeeId" className="text-xs text-muted-foreground">
+              Employee ID (Optional)
+            </Label>
+            <Input id="employeeId" name="employeeId" placeholder="EMP005" />
           </div>
           
           <div className="grid gap-1.5">
@@ -81,6 +95,13 @@ export default async function EmployeesPage() {
               Mobile Number
             </Label>
             <Input id="mobile" name="mobile" type="tel" placeholder="9876543210" required />
+          </div>
+
+          <div className="grid gap-1.5">
+            <Label htmlFor="password" className="text-xs text-muted-foreground">
+              Password
+            </Label>
+            <Input id="password" name="password" type="password" placeholder="password123" />
           </div>
 
           <div className="grid gap-1.5">
@@ -100,7 +121,7 @@ export default async function EmployeesPage() {
 
           <div className="grid gap-1.5">
             <Label htmlFor="managerId" className="text-xs text-muted-foreground">
-              Assign Manager (Optional)
+              Manager (Optional)
             </Label>
             <select
               id="managerId"

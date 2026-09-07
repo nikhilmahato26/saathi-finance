@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import bcrypt from "bcryptjs";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import type { Role } from "@/generated/prisma/client";
@@ -11,9 +12,11 @@ export async function createStaff(formData: FormData) {
     throw new Error("Unauthorized");
   }
 
-  const name = formData.get("name") as string;
-  const mobile = formData.get("mobile") as string;
+  const name = (formData.get("name") as string)?.trim();
+  const mobile = (formData.get("mobile") as string)?.trim();
   const role = formData.get("role") as Role;
+  let employeeId = (formData.get("employeeId") as string)?.trim().toUpperCase();
+  const password = (formData.get("password") as string)?.trim() || "password123";
   let managerId = formData.get("managerId") as string | null;
 
   if (!name || !mobile || !role) {
@@ -30,19 +33,38 @@ export async function createStaff(formData: FormData) {
   }
 
   // Check if mobile number exists
-  const existing = await db.user.findUnique({
+  const existingMobile = await db.user.findUnique({
     where: { mobile },
   });
 
-  if (existing) {
+  if (existingMobile) {
     throw new Error("A user with this mobile number already exists.");
   }
+
+  // If employeeId is not provided, generate one
+  if (!employeeId) {
+    const prefix = role === "MANAGER" ? "MGR" : "EMP";
+    const count = await db.user.count({ where: { role: { in: ["EMPLOYEE", "MANAGER"] } } });
+    employeeId = `${prefix}${String(count + 1).padStart(3, "0")}`;
+  } else {
+    // Check if employeeId exists
+    const existingId = await db.user.findUnique({
+      where: { employeeId },
+    });
+    if (existingId) {
+      throw new Error(`Employee ID ${employeeId} is already in use.`);
+    }
+  }
+
+  const passwordHash = await bcrypt.hash(password, 10);
 
   await db.user.create({
     data: {
       name,
       mobile,
       role,
+      employeeId,
+      passwordHash,
       managerId,
     },
   });

@@ -1,20 +1,29 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { requestOtp } from "@/lib/otp";
-import { db } from "@/lib/db";
+import { AuthError } from "next-auth";
+import { signIn } from "@/auth";
 
-export async function requestStaffOtp(formData: FormData) {
-  const mobile = String(formData.get("mobile") ?? "").trim();
-  if (!/^[6-9]\d{9}$/.test(mobile)) {
-    redirect("/login?error=1");
+export async function loginStaff(formData: FormData) {
+  const employeeId = String(formData.get("employeeId") ?? "").trim();
+  const password = String(formData.get("password") ?? "");
+
+  if (!employeeId || !password) {
+    redirect("/login?error=missing");
   }
 
-  const user = await db.user.findUnique({ where: { mobile } });
-  if (!user || user.role === "CUSTOMER") {
-    redirect("/login?error=notfound");
+  try {
+    await signIn("credentials", {
+      employeeId,
+      password,
+      redirect: false,
+    });
+  } catch (err) {
+    if (err instanceof AuthError) {
+      redirect("/login?error=invalid");
+    }
+    throw err;
   }
 
-  const res = await requestOtp(mobile);
-  redirect(`/login/verify?mobile=${mobile}&code=${res.devCode}`);
+  redirect("/dashboard");
 }

@@ -8,12 +8,14 @@ declare module "next-auth" {
       role: Role;
       name: string;
       mobile: string;
+      employeeId?: string | null;
     };
   }
 
   interface User {
     role?: Role;
     mobile?: string;
+    employeeId?: string | null;
   }
 }
 
@@ -24,7 +26,7 @@ declare module "next-auth" {
  */
 export default {
   session: { strategy: "jwt" },
-  pages: { signIn: "/verify" },
+  pages: { signIn: "/login" },
   providers: [],
   callbacks: {
     async jwt({ token, user }) {
@@ -32,6 +34,7 @@ export default {
         token.id = user.id as string;
         token.role = user.role as Role;
         token.mobile = user.mobile as string;
+        token.employeeId = user.employeeId as string | null | undefined;
       }
       return token;
     },
@@ -39,6 +42,7 @@ export default {
       session.user.id = token.id as string;
       session.user.role = token.role as Role;
       session.user.mobile = token.mobile as string;
+      session.user.employeeId = token.employeeId as string | null | undefined;
       return session;
     },
   },
