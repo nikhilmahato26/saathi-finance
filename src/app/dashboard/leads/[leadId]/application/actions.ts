@@ -10,7 +10,6 @@ import {
   employmentSchema,
   loanDetailsSchema,
   propertySchema,
-  paymentSchema,
   type HomeLoanFields,
 } from "@/lib/home-loan-schema";
 import type { StationFormState } from "@/lib/station-form-state";
@@ -110,19 +109,60 @@ export async function markDocumentsComplete(leadId: string) {
   revalidatePath(`/dashboard/leads/${leadId}/application`);
 }
 
-import { createRazorpayOrder, verifyRazorpaySignature } from "@/lib/razorpay";
+import { getLoanProcessingFee, generateUpiQrDataUrl } from "@/lib/payment-settings";
 
-export async function initiateRazorpayPayment(leadId: string, amountInPaise: number) {
-  const { actorId } = await requireLeadAccess(leadId);
-  const order = await createRazorpayOrder(amountInPaise, leadId);
-  return { orderId: order.id, amount: order.amount };
+export async function getLeadPaymentDetails(leadId: string) {
+  await requireLeadAccess(leadId);
+  const lead = await db.lead.findUniqueOrThrow({
+    where: { id: leadId },
+    select: { leadCode: true, productType: true },
+  });
+
+  const config = await getLoanProcessingFee(lead.productType);
+  return {
+    leadCode: lead.leadCode,
+    productType: lead.productType,
+    amount: config.amount,
+    upiId: config.upiId,
+    payeeName: config.payeeName,
+  };
 }
 
-export async function recordPayment(leadId: string, razorpayPaymentId: string, razorpayOrderId: string, razorpaySignature: string): Promise<StationFormState> {
+export async function generateLeadPaymentQr(leadId: string) {
+  await requireLeadAccess(leadId);
+  const lead = await db.lead.findUniqueOrThrow({
+    where: { id: leadId },
+    select: { leadCode: true, productType: true },
+  });
+
+  const config = await getLoanProcessingFee(lead.productType);
+  const { qrDataUrl, upiUri } = await generateUpiQrDataUrl({
+    upiId: config.upiId,
+    payeeName: config.payeeName,
+    amount: config.amount,
+    leadCode: lead.leadCode,
+  });
+
+  return {
+    leadCode: lead.leadCode,
+    amount: config.amount,
+    upiId: config.upiId,
+    payeeName: config.payeeName,
+    qrDataUrl,
+    upiUri,
+  };
+}
+
+export async function recordUtrPayment(
+  leadId: string,
+  utrNumber: string,
+  amountInRupees: number
+): Promise<StationFormState> {
   const { actorId, ip } = await requireLeadAccess(leadId);
-  
-  if (!verifyRazorpaySignature(razorpayOrderId, razorpayPaymentId, razorpaySignature)) {
-    return { error: "Invalid payment signature. Verification failed." };
+
+  const cleanUtr = utrNumber.trim();
+  if (!cleanUtr || cleanUtr.length < 6) {
+    return { error: "Please enter a valid 6 to 22 character UTR / UPI Reference Number." };
   }
 
   const lead = await db.lead.findUniqueOrThrow({
@@ -141,20 +181,31 @@ export async function recordPayment(leadId: string, razorpayPaymentId: string, r
     customerName: lead.customer.name,
     customerMobile: lead.customer.mobile,
     fields,
-    paymentRef: razorpayPaymentId,
+    paymentRef: `UTR-${cleanUtr}`,
   });
   const pdfUrl = await savePdf(leadId, `${lead.leadCode}.pdf`, pdfBytes);
 
-  await db.loanApplication.update({
-    where: { leadId },
-    data: {
-      processingFeePaid: true,
-      paymentRef: razorpayPaymentId,
-      paymentAmount: 295000, // paise
-      pdfUrl,
-      submittedAt: new Date(),
-    },
-  });
+  await db.$transaction([
+    db.loanApplication.update({
+      where: { leadId },
+      data: {
+        processingFeePaid: true,
+        paymentRef: cleanUtr,
+        paymentAmount: Math.round(amountInRupees * 100), // paise
+        pdfUrl,
+        submittedAt: new Date(),
+      },
+    }),
+    db.activityLog.create({
+      data: {
+        actorId,
+        action: "FEE_PAID_UPI_UTR",
+        entityType: "Lead",
+        entityId: leadId,
+        ipAddress: ip,
+      },
+    }),
+  ]);
 
   await advanceStatusIfFurther(leadId, "LOGIN", actorId, ip);
   revalidatePath(`/dashboard/leads/${leadId}/application`);

@@ -233,3 +233,12 @@ model OtpCode {
 
   @@index([mobile])
 }
+
+model PaymentSetting {
+  id        String   @id @default("default")
+  upiId     String   @default("saathifinance@okaxis")
+  payeeName String   @default("Saathi Finance")
+  feesJson  Json     @default("{\"HOME_LOAN\": 2950, \"PERSONAL_LOAN\": 1499, \"VEHICLE_LOAN\": 1999, \"BUSINESS_LOAN\": 2999, \"DEFAULT\": 2950}")
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+}

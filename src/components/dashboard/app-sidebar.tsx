@@ -30,6 +30,7 @@ const NAV_BY_ROLE: Record<Role, NavItem[]> = {
     { label: "Partners", href: "/dashboard/admin/partners" },
     { label: "Lenders", href: "/dashboard/admin/lenders" },
     { label: "Reports", href: "/dashboard/reports" },
+    { label: "Payment & QR", href: "/dashboard/admin/payment-settings" },
     { label: "Activity log", href: "/dashboard/admin/activity" },
   ],
   MANAGER: [
