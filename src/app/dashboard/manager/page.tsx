@@ -30,7 +30,9 @@ import { ProductDonutChart } from "@/components/dashboard/product-donut-chart";
 import { LeadsTable } from "@/components/dashboard/leads-table";
 import { EmptyState } from "@/components/dashboard/empty-state";
 import { buttonVariants } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { LeadStatus } from "@/generated/prisma/client";
+import { getManagerCategoryLabel } from "@/lib/products";
 
 interface ManagerSearchParams {
   range?: string;
@@ -50,12 +52,18 @@ async function ManagerDashboardContent({ searchParams }: { searchParams: Manager
   const { role, id } = session.user;
   const { startDate, endDate } = getDatesFromRange(searchParams.range, searchParams.from, searchParams.to);
 
-  // Fetch team members for the employee filter dropdown
-  const teamMembers = await db.user.findMany({
-    where: role === "ADMIN" ? { role: "EMPLOYEE" } : { managerId: id },
-    select: { id: true, name: true },
-    orderBy: { name: "asc" },
-  });
+  // Fetch manager profile (assignedCategory) & team members for the employee filter dropdown
+  const [managerUser, teamMembers] = await Promise.all([
+    db.user.findUnique({
+      where: { id },
+      select: { assignedCategory: true, name: true },
+    }),
+    db.user.findMany({
+      where: role === "ADMIN" ? { role: "EMPLOYEE" } : { managerId: id },
+      select: { id: true, name: true },
+      orderBy: { name: "asc" },
+    }),
+  ]);
 
   const filters: DashboardFilters = {
     actorId: id,
@@ -88,7 +96,12 @@ async function ManagerDashboardContent({ searchParams }: { searchParams: Manager
       {/* Header & Filter Controls */}
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">Manager Overview</h1>
+          <div className="flex flex-wrap items-center gap-2.5">
+            <h1 className="text-2xl font-bold tracking-tight text-foreground">Manager Overview</h1>
+            <Badge variant="outline" className="border-primary/30 bg-primary/5 text-xs font-medium">
+              Desk: {getManagerCategoryLabel(managerUser?.assignedCategory)}
+            </Badge>
+          </div>
           <p className="mt-0.5 text-xs sm:text-sm text-muted-foreground">
             Team pipeline, target achievements, and operational velocity.
           </p>
@@ -157,7 +170,10 @@ async function ManagerDashboardContent({ searchParams }: { searchParams: Manager
                   {unassignedLeads.length} Unassigned Public Inquiries Available
                 </h3>
                 <p className="text-xs text-muted-foreground">
-                  Incoming leads awaiting an advisor assignment. Claim or assign them to your team.
+                  Incoming leads awaiting an advisor assignment.
+                  {managerUser?.assignedCategory && managerUser.assignedCategory !== "ALL"
+                    ? ` Specially monitoring your ${getManagerCategoryLabel(managerUser.assignedCategory)} desk.`
+                    : " Claim or assign them to your team."}
                 </p>
               </div>
             </div>

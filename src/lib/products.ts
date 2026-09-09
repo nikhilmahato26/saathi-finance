@@ -27,6 +27,23 @@ export const PRODUCT_OPTIONS: ProductOption[] = [
   { key: "BANKING_CREDIT_CARD", label: "Credit card", category: "BANKING", routeType: "EXTERNAL_REFERRAL" },
 ];
 
+export const MANAGER_CATEGORIES = [
+  { key: "ALL", label: "All Categories (General)" },
+  { key: "HOME_LOAN", label: "Home Loan Desk" },
+  { key: "PERSONAL_LOAN", label: "Personal Loan Desk" },
+  { key: "VEHICLE_LOAN", label: "Vehicle Loan Desk" },
+  { key: "BUSINESS_LOAN", label: "Business Loan Desk" },
+  { key: "INSURANCE", label: "Insurance Operations" },
+  { key: "TAX", label: "Tax & Compliance Operations" },
+  { key: "BANKING", label: "Banking Operations" },
+] as const;
+
+export function getManagerCategoryLabel(category?: string | null): string {
+  if (!category || category === "ALL") return "All Categories (General)";
+  const found = MANAGER_CATEGORIES.find((c) => c.key === category);
+  return found ? found.label : category.replace(/_/g, " ");
+}
+
 export function getProductOption(key: string): ProductOption | undefined {
   return PRODUCT_OPTIONS.find((option) => option.key === key);
 }

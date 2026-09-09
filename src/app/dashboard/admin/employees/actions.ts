@@ -56,6 +56,8 @@ export async function createStaff(formData: FormData) {
     }
   }
 
+  const assignedCategory = (formData.get("assignedCategory") as string)?.trim() || null;
+
   const passwordHash = await bcrypt.hash(password, 10);
 
   await db.user.create({
@@ -66,10 +68,48 @@ export async function createStaff(formData: FormData) {
       employeeId,
       passwordHash,
       managerId,
+      assignedCategory: role === "MANAGER" && assignedCategory && assignedCategory !== "ALL" ? assignedCategory : null,
     },
   });
 
   revalidatePath("/dashboard/admin/employees");
+}
+
+export async function assignManagerCategory(userId: string, category: string) {
+  const session = await auth();
+  if (session?.user?.role !== "ADMIN") {
+    throw new Error("Unauthorized");
+  }
+
+  const user = await db.user.findUniqueOrThrow({
+    where: { id: userId },
+    select: { id: true, name: true, role: true },
+  });
+
+  if (user.role !== "MANAGER") {
+    throw new Error("Loan categories can only be assigned to Managers.");
+  }
+
+  const cleanCategory = category.trim();
+
+  await db.$transaction([
+    db.user.update({
+      where: { id: userId },
+      data: { assignedCategory: cleanCategory === "ALL" ? null : cleanCategory },
+    }),
+    db.activityLog.create({
+      data: {
+        actorId: session.user.id,
+        action: `MANAGER_CATEGORY_ASSIGNED_${cleanCategory}`,
+        entityType: "User",
+        entityId: userId,
+        ipAddress: "127.0.0.1",
+      },
+    }),
+  ]);
+
+  revalidatePath("/dashboard/admin/employees");
+  revalidatePath("/dashboard/manager", "layout");
 }
 
 export async function changeRole(userId: string, newRole: Role) {
@@ -82,11 +122,14 @@ export async function changeRole(userId: string, newRole: Role) {
     throw new Error("Invalid role specified");
   }
 
-  const data: { role: Role; managerId?: string | null } = { role: newRole };
+  const data: { role: Role; managerId?: string | null; assignedCategory?: string | null } = { role: newRole };
   
   if (newRole === "MANAGER") {
     // Managers should not have a manager assigned
     data.managerId = null;
+  } else {
+    // Demoted to employee: clear manager category
+    data.assignedCategory = null;
   }
 
   await db.user.update({

@@ -232,6 +232,15 @@ export function ActivityLogClient({ initialLogs, staffList }: ActivityLogClientP
         badgeBg: "bg-rose-500/10 text-rose-600",
       };
     }
+    if (action.startsWith("MANAGER_CATEGORY_ASSIGNED_")) {
+      const cat = action.replace("MANAGER_CATEGORY_ASSIGNED_", "");
+      return {
+        label: `Desk Assigned: ${cat.replace(/_/g, " ")}`,
+        icon: UserCheck,
+        className: "bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 border-cyan-500/30",
+        badgeBg: "bg-cyan-500/10 text-cyan-600",
+      };
+    }
     if (action.includes("ASSIGN")) {
       return {
         label: "Lead Assigned",

@@ -58,6 +58,7 @@ model User {
   mobile        String    @unique
   otpVerifiedAt DateTime?
   email         String?   @unique
+  assignedCategory String? // e.g. "HOME_LOAN" | "PERSONAL_LOAN" | "VEHICLE_LOAN" | "BUSINESS_LOAN" | "ALL"
   managerId     String?
   manager       User?     @relation("ManagerTeam", fields: [managerId], references: [id])
   team          User[]    @relation("ManagerTeam")
