@@ -55,7 +55,12 @@ function SliderField({
   min,
   max,
   step,
-  formatValue,
+  prefix,
+  suffix,
+  isCurrency = false,
+  isDecimal = false,
+  inputMin,
+  inputMax,
   invert = false,
 }: {
   label: string;
@@ -64,27 +69,175 @@ function SliderField({
   min: number;
   max: number;
   step: number;
-  formatValue: (value: number) => string;
+  prefix?: string;
+  suffix?: string;
+  isCurrency?: boolean;
+  isDecimal?: boolean;
+  inputMin?: number;
+  inputMax?: number;
   invert?: boolean;
 }) {
-  const id = useId();
+  const inputId = useId();
+  const sliderId = useId();
+  const [isFocused, setIsFocused] = useState(false);
+  const [typedValue, setTypedValue] = useState("");
+
+  const displayValue = isCurrency
+    ? value.toLocaleString("en-IN")
+    : isDecimal
+      ? String(value)
+      : String(value);
+
+  const sliderValue = Math.min(Math.max(value, min), max);
+
+  const parseCustomNumber = (raw: string): number | null => {
+    const trimmed = raw.trim().toLowerCase();
+    if (!trimmed) return null;
+
+    // Check for suffix multipliers (e.g. 25L, 2.5Cr, 50k)
+    if (trimmed.endsWith("cr") || trimmed.endsWith("crore") || trimmed.endsWith("crores")) {
+      const numeric = parseFloat(trimmed.replace(/[^0-9.]/g, ""));
+      return !isNaN(numeric) && numeric > 0 ? Math.round(numeric * 10000000) : null;
+    }
+    if (trimmed.endsWith("l") || trimmed.endsWith("lac") || trimmed.endsWith("lakh") || trimmed.endsWith("lakhs")) {
+      const numeric = parseFloat(trimmed.replace(/[^0-9.]/g, ""));
+      return !isNaN(numeric) && numeric > 0 ? Math.round(numeric * 100000) : null;
+    }
+    if (trimmed.endsWith("k")) {
+      const numeric = parseFloat(trimmed.replace(/[^0-9.]/g, ""));
+      return !isNaN(numeric) && numeric > 0 ? Math.round(numeric * 1000) : null;
+    }
+
+    // Standard number parsing
+    const cleaned = isDecimal
+      ? trimmed.replace(/[^0-9.]/g, "")
+      : trimmed.replace(/[^0-9]/g, "");
+    
+    if (!cleaned) return null;
+    const num = parseFloat(cleaned);
+    return !isNaN(num) && num > 0 ? num : null;
+  };
+
+  const handleInputChange = (raw: string) => {
+    setTypedValue(raw);
+
+    const parsed = parseCustomNumber(raw);
+    if (parsed !== null) {
+      onChange(parsed);
+    }
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+    const parsed = parseCustomNumber(typedValue);
+    let num = parsed !== null ? parsed : value;
+
+    // Apply sensible bounds
+    const lower = inputMin ?? (isCurrency ? 10000 : min);
+    const upper = inputMax ?? (isCurrency ? 100000000 : max);
+    num = Math.min(Math.max(num, lower), upper);
+
+    if (isDecimal) {
+      num = Number(num.toFixed(2));
+    } else {
+      num = Math.round(num);
+    }
+
+    onChange(num);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      (e.target as HTMLInputElement).blur();
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      const next = value + step;
+      const rounded = isDecimal ? Number(next.toFixed(2)) : Math.round(next);
+      onChange(rounded);
+      setTypedValue(String(rounded));
+    } else if (e.key === "ArrowDown") {
+      e.preventDefault();
+      const next = Math.max(value - step, min);
+      const rounded = isDecimal ? Number(next.toFixed(2)) : Math.round(next);
+      onChange(rounded);
+      setTypedValue(String(rounded));
+    }
+  };
+
   return (
-    <div className="grid gap-2">
-      <div className="flex items-baseline justify-between gap-2">
-        <label htmlFor={id} className={cn("text-sm", invert ? "text-background/70" : "text-muted-foreground")}>
+    <div className="grid gap-2.5">
+      <div className="flex items-center justify-between gap-3">
+        <label
+          htmlFor={inputId}
+          className={cn(
+            "text-sm font-medium cursor-pointer transition-colors",
+            invert ? "text-background/80 hover:text-background" : "text-muted-foreground hover:text-foreground"
+          )}
+        >
           {label}
         </label>
-        <span className="font-mono text-sm font-semibold tabular-nums">{formatValue(value)}</span>
+        <div
+          className={cn(
+            "flex h-9 w-36 sm:w-40 items-center justify-end rounded-lg border px-2.5 transition-all",
+            invert
+              ? "border-background/25 bg-background/10 hover:border-background/40 focus-within:border-background focus-within:bg-background/15 focus-within:ring-2 focus-within:ring-background/30"
+              : "border-border bg-secondary/60 hover:border-foreground/30 focus-within:border-foreground focus-within:bg-background focus-within:ring-2 focus-within:ring-foreground/15"
+          )}
+        >
+          {prefix && (
+            <span
+              className={cn(
+                "font-mono text-sm font-semibold select-none mr-1 shrink-0",
+                invert ? "text-background/70" : "text-muted-foreground"
+              )}
+            >
+              {prefix}
+            </span>
+          )}
+          <input
+            id={inputId}
+            type="text"
+            inputMode={isDecimal ? "decimal" : "numeric"}
+            value={isFocused ? typedValue : displayValue}
+            onFocus={(e) => {
+              setIsFocused(true);
+              setTypedValue(isCurrency ? String(value) : displayValue);
+              e.target.select();
+            }}
+            onChange={(e) => handleInputChange(e.target.value)}
+            onBlur={handleBlur}
+            onKeyDown={handleKeyDown}
+            className={cn(
+              "w-full text-right font-mono text-sm font-semibold tabular-nums outline-none bg-transparent",
+              invert ? "text-background" : "text-foreground"
+            )}
+            aria-label={label}
+          />
+          {suffix && (
+            <span
+              className={cn(
+                "text-xs font-medium select-none ml-1.5 shrink-0",
+                invert ? "text-background/70" : "text-muted-foreground"
+              )}
+            >
+              {suffix}
+            </span>
+          )}
+        </div>
       </div>
       <input
-        id={id}
+        id={sliderId}
         type="range"
         min={min}
         max={max}
         step={step}
-        value={value}
+        value={sliderValue}
         onChange={(e) => onChange(Number(e.target.value))}
-        className={invert ? "text-background" : "text-foreground"}
+        className={cn(
+          "w-full cursor-pointer",
+          invert ? "text-background" : "text-foreground"
+        )}
+        aria-label={`${label} slider`}
       />
     </div>
   );
@@ -114,16 +267,17 @@ export function HeroLoanWidget({ className }: { className?: string }) {
           min={100000}
           max={10000000}
           step={50000}
-          formatValue={formatINR}
+          prefix="₹"
+          isCurrency
         />
         <SliderField
-          label="Tenure (years)"
+          label="Tenure"
           value={years}
           onChange={setYears}
           min={1}
           max={30}
           step={1}
-          formatValue={(v) => `${v} yr`}
+          suffix="yr"
         />
       </div>
       <div className="mt-6 rounded-xl bg-foreground px-5 py-4 text-background">
@@ -161,7 +315,8 @@ export function EmiCalculatorSection() {
           min={100000}
           max={10000000}
           step={50000}
-          formatValue={formatINR}
+          prefix="₹"
+          isCurrency
           invert
         />
         <SliderField
@@ -171,7 +326,7 @@ export function EmiCalculatorSection() {
           min={1}
           max={30}
           step={1}
-          formatValue={(v) => `${v} years`}
+          suffix="years"
           invert
         />
         <SliderField
@@ -181,7 +336,8 @@ export function EmiCalculatorSection() {
           min={7}
           max={16}
           step={0.1}
-          formatValue={(v) => `${v.toFixed(1)}%`}
+          suffix="%"
+          isDecimal
           invert
         />
       </div>

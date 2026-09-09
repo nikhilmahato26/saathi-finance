@@ -285,7 +285,7 @@ export default function HomePage() {
       </section>
 
       {/* Services grid */}
-      <section className="border-t bg-secondary/40">
+      <section id="services" className="scroll-mt-16 border-t bg-secondary/40">
         <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-28">
           <Reveal>
             <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
@@ -390,7 +390,7 @@ export default function HomePage() {
       </section>
 
       {/* EMI calculator */}
-      <section className="border-t bg-foreground text-background">
+      <section id="emi-calculator" className="scroll-mt-16 border-t bg-foreground text-background">
         <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-28">
           <Reveal>
             <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
@@ -407,7 +407,7 @@ export default function HomePage() {
       </section>
 
       {/* About Us */}
-      <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-28">
+      <section id="about" className="scroll-mt-16 mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-28">
         <div className="grid gap-14 lg:grid-cols-2 lg:items-center lg:gap-20">
           <Reveal>
             <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
