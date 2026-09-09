@@ -34,6 +34,10 @@ export async function getPaymentSettings(): Promise<{
   fees: LoanFeeConfig;
 }> {
   try {
+    if (!db?.paymentSetting) {
+      return DEFAULT_PAYMENT_CONFIG;
+    }
+
     const setting = await db.paymentSetting.findUnique({
       where: { id: "default" },
     });

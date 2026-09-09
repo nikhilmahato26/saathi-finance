@@ -40,6 +40,10 @@ export async function savePaymentSettingsAction(formData: FormData) {
     DEFAULT: defaultFee,
   };
 
+  if (!db.paymentSetting) {
+    return { error: "Database client is re-initializing schema. Please try again in 5 seconds." };
+  }
+
   await db.$transaction([
     db.paymentSetting.upsert({
       where: { id: "default" },
