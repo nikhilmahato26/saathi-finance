@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { StatusSelectField } from "@/components/dashboard/status-select-field";
 import { AssignSelectField } from "@/components/dashboard/assign-select-field";
 import Link from "next/link";
+import { ExternalLink } from "lucide-react";
 import { assignLead, changeStatus, addRemark } from "./actions";
 
 export default async function LeadDetailPage({
@@ -126,9 +127,24 @@ export default async function LeadDetailPage({
             {lead.documents.length > 0 ? (
               <ul className="mt-3 grid gap-1.5 text-sm">
                 {lead.documents.map((doc) => (
-                  <li key={doc.id} className="flex justify-between text-muted-foreground">
-                    <span>{doc.docType}</span>
-                    <span className="text-xs">{doc.category}</span>
+                  <li key={doc.id} className="flex items-center justify-between text-sm py-1 border-b border-border/40 last:border-0">
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium text-foreground">{doc.docType}</span>
+                      <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-secondary text-muted-foreground">
+                        {doc.category}
+                      </span>
+                    </div>
+                    {doc.fileUrl ? (
+                      <a
+                        href={doc.fileUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs font-medium text-foreground hover:underline inline-flex items-center gap-1 bg-secondary/60 hover:bg-secondary px-2 py-0.5 rounded transition-colors"
+                      >
+                        <span>View</span>
+                        <ExternalLink className="h-3 w-3" />
+                      </a>
+                    ) : null}
                   </li>
                 ))}
               </ul>
