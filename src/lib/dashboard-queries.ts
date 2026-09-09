@@ -201,7 +201,7 @@ export async function getTimeSeriesTrends(filters: DashboardFilters, days = 7) {
   const curr = new Date(start);
   while (curr <= end) {
     const key = curr.toISOString().split("T")[0];
-    const label = curr.toLocaleDateString("en-IN", { month: "short", day: "numeric" });
+    const label = curr.toLocaleDateString("en-IN", { day: "numeric", month: "short" });
     buckets[key] = { label, leads: 0, sanctions: 0, disbursements: 0 };
     curr.setDate(curr.getDate() + 1);
   }
