@@ -32,7 +32,7 @@ export default async function StaffLoginPage({
             id="employeeId"
             name="employeeId"
             type="text"
-            placeholder="e.g. EMP001 or 9820011225"
+            placeholder="e.g. ADMIN001 or 7247580309"
             required
             autoFocus
             autoComplete="username"
@@ -55,19 +55,6 @@ export default async function StaffLoginPage({
           Sign in
         </SubmitButton>
       </form>
-
-      <div className="mt-8 rounded-lg border bg-muted/40 p-4 text-xs">
-        <p className="font-semibold text-foreground">Development Credentials</p>
-        <div className="mt-2 grid grid-cols-2 gap-1 text-muted-foreground">
-          <span>Admin: <strong className="font-mono text-foreground">ADMIN001</strong></span>
-          <span>Manager: <strong className="font-mono text-foreground">MGR001</strong></span>
-          <span>Employee: <strong className="font-mono text-foreground">EMP001</strong></span>
-          <span>Partner: <strong className="font-mono text-foreground">PTR001</strong></span>
-        </div>
-        <p className="mt-2 text-muted-foreground">
-          Password: <strong className="font-mono text-foreground">password123</strong>
-        </p>
-      </div>
     </section>
   );
 }
