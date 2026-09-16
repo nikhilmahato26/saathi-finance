@@ -4,7 +4,7 @@ import { useTransition, useState } from "react";
 import { toast } from "sonner";
 import { assignManagerCategory } from "./actions";
 import { MANAGER_CATEGORIES } from "@/lib/products";
-import { Loader2 } from "lucide-react";
+import { Loader2, Briefcase, ChevronDown } from "lucide-react";
 
 interface ManagerCategorySelectorProps {
   userId: string;
@@ -41,12 +41,13 @@ export function ManagerCategorySelector({
 
   return (
     <div className="relative inline-flex items-center">
+      <Briefcase className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground pointer-events-none" />
       <select
         value={selected}
         disabled={isPending}
         onChange={handleChange}
         aria-label={`Assign loan category to ${userName}`}
-        className="h-8 w-full max-w-[210px] rounded-md border border-input bg-background/90 px-2.5 py-1 text-xs font-medium shadow-2xs transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:opacity-50 hover:bg-accent/40 cursor-pointer pr-7"
+        className="h-8 w-full min-w-[190px] max-w-[220px] rounded-md border border-input bg-background/90 pl-8 pr-7 py-1 text-xs font-medium shadow-2xs transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:opacity-50 hover:bg-accent/40 cursor-pointer appearance-none"
       >
         {MANAGER_CATEGORIES.map((cat) => (
           <option key={cat.key} value={cat.key}>
@@ -54,9 +55,13 @@ export function ManagerCategorySelector({
           </option>
         ))}
       </select>
-      {isPending && (
-        <span className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
+      {isPending ? (
+        <span className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none">
           <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />
+        </span>
+      ) : (
+        <span className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
+          <ChevronDown className="h-3.5 w-3.5" />
         </span>
       )}
     </div>

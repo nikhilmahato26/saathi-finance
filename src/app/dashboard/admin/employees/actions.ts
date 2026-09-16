@@ -139,3 +139,36 @@ export async function changeRole(userId: string, newRole: Role) {
 
   revalidatePath("/dashboard/admin/employees");
 }
+
+export async function resetStaffPassword(userId: string, newPassword: string) {
+  const session = await auth();
+  if (session?.user?.role !== "ADMIN") {
+    throw new Error("Unauthorized");
+  }
+
+  const cleanPassword = newPassword.trim();
+  if (!cleanPassword || cleanPassword.length < 6) {
+    throw new Error("Password must be at least 6 characters long.");
+  }
+
+  const passwordHash = await bcrypt.hash(cleanPassword, 10);
+
+  const user = await db.user.update({
+    where: { id: userId },
+    data: { passwordHash },
+    select: { id: true, name: true, employeeId: true },
+  });
+
+  await db.activityLog.create({
+    data: {
+      actorId: session.user.id,
+      action: "STAFF_PASSWORD_RESET",
+      entityType: "User",
+      entityId: userId,
+      ipAddress: "127.0.0.1",
+    },
+  });
+
+  revalidatePath("/dashboard/admin/employees");
+  return { success: true, name: user.name };
+}
