@@ -5,17 +5,32 @@ import { Label } from "@/components/ui/label";
 import { ProductSelectField } from "@/components/site/product-select-field";
 import { FormError } from "@/components/form-error";
 import { TRUSTED_PARTNERS } from "@/components/site/partner-logos";
-import { ShieldCheck } from "lucide-react";
+import { UserCheck } from "lucide-react";
 import { submitBasicDetails } from "./actions";
+import { db } from "@/lib/db";
 
 export default async function ApplyPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string; partner?: string }>;
+  searchParams: Promise<{ error?: string; partner?: string; ref?: string; product?: string }>;
 }) {
-  const { error, partner: partnerId } = await searchParams;
+  const { error, partner: partnerId, ref: refParam, product: productParam } = await searchParams;
   const selectedPartner = partnerId
     ? TRUSTED_PARTNERS.find((p) => p.id === partnerId)
+    : null;
+
+  const advisor = refParam
+    ? await db.user.findFirst({
+        where: {
+          OR: [
+            { employeeId: refParam.trim().toUpperCase() },
+            { id: refParam.trim() },
+            { mobile: refParam.trim() },
+          ],
+          role: { in: ["EMPLOYEE", "MANAGER"] },
+        },
+        select: { id: true, name: true, employeeId: true },
+      })
     : null;
 
   return (
@@ -37,12 +52,29 @@ export default async function ApplyPage({
         </div>
       )}
 
+      {advisor && (
+        <div className="mb-6 flex items-center gap-3 rounded-xl border border-primary/20 bg-primary/5 p-3.5 shadow-2xs">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+            <UserCheck className="h-5 w-5" />
+          </div>
+          <div>
+            <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              Direct Advisor Desk
+            </span>
+            <p className="text-xs font-semibold text-foreground">
+              {advisor.name} {advisor.employeeId ? `(${advisor.employeeId})` : ""}
+            </p>
+          </div>
+        </div>
+      )}
+
       <h1 className="text-2xl font-semibold tracking-tight">Share your details</h1>
       <p className="mt-2 text-sm text-muted-foreground">
         A Saathi Finance advisor will call you back to complete your application.
       </p>
 
       <form action={submitBasicDetails} className="mt-8 grid gap-6">
+        {advisor && <input type="hidden" name="ref" value={advisor.id} />}
         {error && <FormError>Check your name, mobile number, and product before continuing.</FormError>}
 
         <div className="grid gap-2">
@@ -68,7 +100,7 @@ export default async function ApplyPage({
           </p>
         </div>
 
-        <ProductSelectField />
+        <ProductSelectField defaultValue={productParam} />
 
         <SubmitButton size="lg" className="mt-2" loadingText="Sending code...">
           Get started

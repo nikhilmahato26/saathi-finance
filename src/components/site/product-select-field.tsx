@@ -20,13 +20,19 @@ const CATEGORY_LABELS: Record<string, string> = {
   BANKING: "Banking & cards",
 };
 
-export function ProductSelectField({ defaultValue }: { defaultValue?: string }) {
+export function ProductSelectField({
+  defaultValue,
+  label = "What do you need?",
+}: {
+  defaultValue?: string;
+  label?: string;
+}) {
   const [value, setValue] = useState(defaultValue ?? "");
   const categories = Array.from(new Set(PRODUCT_OPTIONS.map((option) => option.category)));
 
   return (
     <div className="grid gap-2">
-      <Label htmlFor="product">What do you need?</Label>
+      <Label htmlFor="product">{label}</Label>
       <input type="hidden" name="product" value={value} required />
       <Select value={value} onValueChange={(next) => setValue(next ?? "")}>
         <SelectTrigger id="product" className="w-full">

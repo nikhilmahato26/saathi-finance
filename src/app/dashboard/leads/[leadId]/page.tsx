@@ -232,6 +232,16 @@ export default async function LeadDetailPage({
                 </div>
               )}
               <div className="flex justify-between">
+                <dt className="text-muted-foreground">Originated By</dt>
+                <dd className="font-medium">
+                  {lead.createdBy.id === lead.customerId
+                    ? "Inbound Customer"
+                    : lead.createdBy.id === lead.assignedToId
+                    ? `${lead.createdBy.name} (Advisor Self-Created)`
+                    : `${lead.createdBy.name} (${lead.createdBy.role.toLowerCase()})`}
+                </dd>
+              </div>
+              <div className="flex justify-between">
                 <dt className="text-muted-foreground">Created</dt>
                 <dd>
                   {lead.createdAt.toLocaleDateString("en-IN", {

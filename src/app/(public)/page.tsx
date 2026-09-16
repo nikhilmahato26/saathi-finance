@@ -18,17 +18,13 @@
 import Link from "next/link";
 import {
   ArrowRight,
-  Briefcase,
-  Car,
   Clock3,
   CreditCard,
   FileCheck2,
-  Home as HomeIcon,
   Landmark,
   PhoneCall,
   ReceiptText,
   ShieldCheck,
-  Wallet,
 } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { LogoMark } from "@/components/site/logo-mark";
@@ -40,7 +36,6 @@ import { EmiCalculatorSection } from "@/components/site/emi-calculator";
 import { HeroVisual } from "@/components/site/hero-visual";
 import { ApplicationStack } from "@/components/site/application-stack";
 import { ProductOrbit } from "@/components/site/product-orbit";
-import { DrawLine } from "@/components/site/draw-line";
 import { StatusPipeline } from "@/components/site/status-pipeline";
 import {
   TrustedPartnersSection,
@@ -48,6 +43,7 @@ import {
 } from "@/components/site/trusted-partners";
 import { Faq3 } from "@/components/ui/faq3";
 import { STATUS_LABELS, STATUS_PIPELINE_ORDER } from "@/lib/products";
+import { ServicesCatalogSection } from "@/components/site/services-catalog-section";
 
 /** Primary CTA content: label plus a hover-nudge arrow, shared by every "Get started" button. */
 function CtaLabel({ children }: { children: React.ReactNode }) {
@@ -95,38 +91,6 @@ const PILLARS = [
   },
 ];
 
-const SERVICES = [
-  {
-    icon: HomeIcon,
-    title: "Home Loan",
-    body: "Full documentation, property review, and sanction tracked end-to-end, in-house.",
-  },
-  {
-    icon: Car,
-    title: "Vehicle Loan",
-    body: "New or used: car, commercial vehicle, or tractor. Dealer quote through to disbursement.",
-  },
-  {
-    icon: Wallet,
-    title: "Personal Loan",
-    body: "Eligibility checked, matched to a lender, and tracked after the handoff.",
-  },
-  {
-    icon: Briefcase,
-    title: "Business Loan",
-    body: "Turnover, GST, and existing obligations reviewed for the right lender fit.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Insurance",
-    body: "Vehicle, commercial vehicle, tractor, term, and health cover routed to the right partner.",
-  },
-  {
-    icon: ReceiptText,
-    title: "Tax & Banking",
-    body: "ITR filing, GST, Gumasta, RTO, and account or card referrals: one place to track them all.",
-  },
-];
 
 const STEPS = [
   {
@@ -284,38 +248,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Services grid */}
-      <section id="services" className="scroll-mt-16 border-t bg-secondary/40">
-        <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-28">
-          <Reveal>
-            <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-              Every product, one tracked pipeline
-            </h2>
-            <p className="mt-4 max-w-[52ch] text-muted-foreground">
-              Whatever you need, it moves through the same tracked process
-              from application to sanction.
-            </p>
-          </Reveal>
-          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {SERVICES.map((service, i) => (
-              <Reveal key={service.title} delay={i * 80}>
-                <div className="group h-full rounded-xl border bg-card p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-                  <div className="flex items-start justify-between">
-                    <span className="flex h-11 w-11 items-center justify-center rounded-full bg-foreground text-background transition-transform duration-300 group-hover:scale-105">
-                      <service.icon className="h-5 w-5" strokeWidth={1.75} />
-                    </span>
-                    <span className="font-mono text-xs text-muted-foreground/60">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                  </div>
-                  <h3 className="mt-5 font-semibold">{service.title}</h3>
-                  <p className="mt-1.5 text-sm text-muted-foreground">{service.body}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Comprehensive Financial Services Suite */}
+      <ServicesCatalogSection />
 
       {/* Dedicated Trusted Partners Section */}
       <div className="border-t">

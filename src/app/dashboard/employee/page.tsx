@@ -25,6 +25,8 @@ import { PipelineFunnelChart } from "@/components/dashboard/pipeline-funnel-char
 import { TargetProgressCard } from "@/components/dashboard/target-progress-card";
 import { EmptyState } from "@/components/dashboard/empty-state";
 import { LeadsTable } from "@/components/dashboard/leads-table";
+import { AdvisorLeadLink } from "@/components/dashboard/advisor-lead-link";
+import { Badge } from "@/components/ui/badge";
 import { LeadStatus } from "@/generated/prisma/client";
 
 interface EmployeeSearchParams {
@@ -69,7 +71,7 @@ export default async function EmployeeOverviewPage({
   const now = new Date();
   const currentPeriod = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
 
-  const [kpis, funnelStages, myLeads, targetRecord] = await Promise.all([
+  const [kpis, funnelStages, myLeads, targetRecord, employeeUser] = await Promise.all([
     getBusinessKPIs(filters),
     getPipelineFunnel(filters),
     db.lead.findMany({
@@ -86,6 +88,10 @@ export default async function EmployeeOverviewPage({
         period: currentPeriod,
       },
     }),
+    db.user.findUnique({
+      where: { id: employeeId },
+      select: { employeeId: true, name: true },
+    }),
   ]);
 
   // Urgent action leads (Profile pending or Documents pending)
@@ -94,6 +100,8 @@ export default async function EmployeeOverviewPage({
   );
 
   const defaultTarget = targetRecord?.targetValue ?? 10;
+  const selfCreatedCount = myLeads.filter((l) => l.createdById === employeeId).length;
+  const assignedCount = myLeads.length - selfCreatedCount;
 
   return (
     <div className="grid gap-6">
@@ -122,6 +130,13 @@ export default async function EmployeeOverviewPage({
           </Link>
         </div>
       </div>
+
+      {/* Advisor Client Sourcing Widget */}
+      <AdvisorLeadLink
+        employeeId={employeeId}
+        employeeCode={employeeUser?.employeeId}
+        employeeName={session.user.name}
+      />
 
       {/* Top Personal KPI Cards */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
@@ -231,21 +246,51 @@ export default async function EmployeeOverviewPage({
 
       {/* My Leads Table */}
       <div className="rounded-xl border border-border/80 bg-card shadow-2xs overflow-hidden">
-        <div className="flex items-center justify-between border-b px-5 py-3.5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b px-5 py-3.5 gap-2 bg-muted/10">
           <div>
-            <h2 className="text-sm font-semibold text-foreground">My Lead Files ({myLeads.length})</h2>
-            <p className="text-xs text-muted-foreground">Select a file to advance inspection stations</p>
+            <div className="flex flex-wrap items-center gap-2">
+              <h2 className="text-sm font-semibold text-foreground">My Lead Files ({myLeads.length})</h2>
+              <Badge variant="outline" className="text-[11px] font-mono border-emerald-500/30 text-emerald-600 bg-emerald-500/5">
+                {selfCreatedCount} Self-Created
+              </Badge>
+              {assignedCount > 0 && (
+                <Badge variant="secondary" className="text-[11px] font-mono">
+                  {assignedCount} Assigned
+                </Badge>
+              )}
+            </div>
+            <p className="text-xs text-muted-foreground mt-0.5">Select a file to advance inspection stations</p>
           </div>
+          <Link
+            href="/dashboard/leads/new"
+            className={buttonVariants({ size: "sm", className: "h-8 text-xs gap-1.5 shrink-0" })}
+          >
+            <Plus className="h-3.5 w-3.5" />
+            <span>Create Lead</span>
+          </Link>
         </div>
 
         {myLeads.length > 0 ? (
-          <LeadsTable leads={myLeads} basePath="/dashboard/leads" showAssigned={false} />
+          <LeadsTable
+            leads={myLeads}
+            basePath="/dashboard/leads"
+            showAssigned={false}
+            showOrigin={true}
+            currentUserId={employeeId}
+          />
         ) : (
-          <div className="p-6">
+          <div className="p-8 text-center space-y-3">
             <EmptyState
               title="No leads match your filter"
-              hint="Try clearing filters or click '+ New Lead' to register an applicant."
+              hint="You haven't originated any files in this period. Register an applicant directly on your own or share your referral link."
             />
+            <Link
+              href="/dashboard/leads/new"
+              className={buttonVariants({ size: "sm", className: "gap-1.5" })}
+            >
+              <Plus className="h-4 w-4" />
+              <span>Create New Lead</span>
+            </Link>
           </div>
         )}
       </div>

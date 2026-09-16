@@ -13,10 +13,13 @@ export async function verifyAndCreateLead(formData: FormData) {
   const mobile = String(formData.get("mobile") ?? "").trim();
   const productKey = String(formData.get("product") ?? "").trim();
   const code = String(formData.get("code") ?? "").trim();
+  const ref = String(formData.get("ref") ?? "").trim();
 
   const product = getProductOption(productKey);
   if (!name || !mobile || !product || !code) {
-    redirect(`/verify?${new URLSearchParams({ name, mobile, product: productKey, error: "1" })}`);
+    redirect(
+      `/verify?${new URLSearchParams({ name, mobile, product: productKey, ...(ref ? { ref } : {}), error: "1" })}`,
+    );
   }
 
   // The customer's User record must exist before NextAuth's authorize()
@@ -32,7 +35,7 @@ export async function verifyAndCreateLead(formData: FormData) {
   } catch (err) {
     if (err instanceof AuthError) {
       redirect(
-        `/verify?${new URLSearchParams({ name, mobile, product: productKey, error: "1" })}`,
+        `/verify?${new URLSearchParams({ name, mobile, product: productKey, ...(ref ? { ref } : {}), error: "1" })}`,
       );
     }
     throw err;
@@ -40,6 +43,21 @@ export async function verifyAndCreateLead(formData: FormData) {
 
   const user = await db.user.findUniqueOrThrow({ where: { mobile } });
   const leadCode = await generateLeadCode();
+
+  // If referred by an employee/manager, attribute and assign the lead to them
+  let assignedToId: string | null = null;
+  let createdById: string = user.id;
+
+  if (ref) {
+    const advisor = await db.user.findFirst({
+      where: { id: ref, role: { in: ["EMPLOYEE", "MANAGER"] } },
+      select: { id: true },
+    });
+    if (advisor) {
+      assignedToId = advisor.id;
+      createdById = advisor.id;
+    }
+  }
 
   await db.lead.create({
     data: {
@@ -49,7 +67,8 @@ export async function verifyAndCreateLead(formData: FormData) {
       routeType: product.routeType,
       source: "DIRECT",
       customerId: user.id,
-      createdById: user.id,
+      createdById,
+      assignedToId,
     },
   });
 

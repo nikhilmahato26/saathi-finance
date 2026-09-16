@@ -10,9 +10,9 @@ import { verifyAndCreateLead } from "./actions";
 export default async function VerifyPage({
   searchParams,
 }: {
-  searchParams: Promise<{ name?: string; mobile?: string; product?: string; error?: string }>;
+  searchParams: Promise<{ name?: string; mobile?: string; product?: string; ref?: string; error?: string }>;
 }) {
-  const { name = "", mobile = "", product = "", error } = await searchParams;
+  const { name = "", mobile = "", product = "", ref = "", error } = await searchParams;
   const productOption = getProductOption(product);
 
   if (!name || !mobile || !productOption) {
@@ -51,6 +51,7 @@ export default async function VerifyPage({
         <input type="hidden" name="name" value={name} />
         <input type="hidden" name="mobile" value={mobile} />
         <input type="hidden" name="product" value={product} />
+        {ref && <input type="hidden" name="ref" value={ref} />}
 
         {error && <FormError>That code didn&apos;t match. Please try again.</FormError>}
 

@@ -8,6 +8,7 @@ import { ArrowRight, Menu, MessageCircle, Phone, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
+  { href: "/services", label: "Services" },
   { href: "/#about", label: "About" },
   { href: "/#emi-calculator", label: "EMI Calculator" },
   { href: "/status", label: "Track Application" },
