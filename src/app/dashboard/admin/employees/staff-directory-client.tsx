@@ -226,7 +226,6 @@ export function StaffDirectoryClient({
                 <Input
                   id="name"
                   name="name"
-                  placeholder="e.g. Rajesh Kumar"
                   required
                   className="h-9 text-xs"
                 />
@@ -243,7 +242,6 @@ export function StaffDirectoryClient({
                     id="mobile"
                     name="mobile"
                     type="tel"
-                    placeholder="9876543210"
                     required
                     className="h-9 pl-8 text-xs font-mono"
                   />
@@ -261,7 +259,6 @@ export function StaffDirectoryClient({
                 <Input
                   id="employeeId"
                   name="employeeId"
-                  placeholder="e.g. SF-PB-VT-0906"
                   className="h-9 text-xs font-mono uppercase"
                 />
               </div>
@@ -336,7 +333,6 @@ export function StaffDirectoryClient({
                   id="password"
                   name="password"
                   type="text"
-                  placeholder="password123"
                   className="h-9 text-xs font-mono"
                 />
               </div>

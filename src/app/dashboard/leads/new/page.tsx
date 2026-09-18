@@ -89,7 +89,7 @@ export default async function NewLeadPage() {
                 <Label htmlFor="name" className="text-xs font-medium">
                   Customer Full Name <span className="text-destructive">*</span>
                 </Label>
-                <Input id="name" name="name" placeholder="Anita Sharma" required autoComplete="name" />
+                <Input id="name" name="name" required autoComplete="name" />
               </div>
 
               <div className="grid gap-1.5">
@@ -101,7 +101,6 @@ export default async function NewLeadPage() {
                   name="mobile"
                   type="tel"
                   inputMode="numeric"
-                  placeholder="9876543210"
                   pattern="[6-9][0-9]{9}"
                   maxLength={10}
                   required
@@ -113,14 +112,14 @@ export default async function NewLeadPage() {
                 <Label htmlFor="email" className="text-xs font-medium text-muted-foreground">
                   Email Address (Optional)
                 </Label>
-                <Input id="email" name="email" type="email" placeholder="anita@example.com" />
+                <Input id="email" name="email" type="email" />
               </div>
 
               <div className="grid gap-1.5">
                 <Label htmlFor="city" className="text-xs font-medium text-muted-foreground">
                   City / Location (Optional)
                 </Label>
-                <Input id="city" name="city" placeholder="Mumbai, MH" />
+                <Input id="city" name="city" />
               </div>
             </div>
           </div>
@@ -147,9 +146,8 @@ export default async function NewLeadPage() {
                     id="amount"
                     name="amount"
                     type="number"
-                    min="1000"
-                    step="5000"
-                    placeholder="500000"
+                    min="1"
+                    step="any"
                     className="pl-7"
                   />
                 </div>
@@ -195,7 +193,6 @@ export default async function NewLeadPage() {
               <Textarea
                 id="note"
                 name="note"
-                placeholder="e.g. Salaried borrower with HDFC bank statement. Looking for 20-year tenure..."
                 rows={3}
               />
             </div>

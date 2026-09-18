@@ -42,13 +42,16 @@ export interface VehicleLoanFields {
   loanRequirement?: LoanRequirementFields;
 }
 
-// Shared document taxonomy's Income docs (README's "Shared document taxonomy"),
-// plus a Vehicle-only set required only for used vehicles.
-export const INCOME_DOCUMENTS = [
-  { category: "INCOME", docType: "Salary Slip (Salaried)" },
-  { category: "INCOME", docType: "Bank Statement" },
-  { category: "INCOME", docType: "ITR (Business)" },
+// Required KYC documents for Vehicle Loan: Aadhaar (Front & Back) and PAN Card.
+// Plus a Vehicle-only set required only for used vehicles.
+export const KYC_DOCUMENTS = [
+  { category: "KYC", docType: "Aadhaar Card (Front)" },
+  { category: "KYC", docType: "Aadhaar Card (Back)" },
+  { category: "KYC", docType: "PAN Card" },
 ] as const;
+
+// Retained alias for backward compatibility
+export const INCOME_DOCUMENTS = KYC_DOCUMENTS;
 
 export const USED_VEHICLE_DOCUMENTS = [
   { category: "VEHICLE", docType: "RC (Registration Certificate)" },
@@ -57,7 +60,7 @@ export const USED_VEHICLE_DOCUMENTS = [
 ] as const;
 
 export function getRequiredDocuments(condition?: VehicleDetailsFields["condition"]) {
-  return condition === "USED" ? [...INCOME_DOCUMENTS, ...USED_VEHICLE_DOCUMENTS] : INCOME_DOCUMENTS;
+  return condition === "USED" ? [...KYC_DOCUMENTS, ...USED_VEHICLE_DOCUMENTS] : KYC_DOCUMENTS;
 }
 
 export const VEHICLE_STATIONS = [

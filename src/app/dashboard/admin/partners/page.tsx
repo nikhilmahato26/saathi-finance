@@ -63,28 +63,28 @@ export default async function PartnersPage() {
             <Label htmlFor="name" className="text-xs text-muted-foreground">
               Full Name
             </Label>
-            <Input id="name" name="name" placeholder="John Doe" required />
+            <Input id="name" name="name" required />
           </div>
 
           <div className="grid gap-1.5">
             <Label htmlFor="employeeId" className="text-xs text-muted-foreground">
               Partner ID (Optional)
             </Label>
-            <Input id="employeeId" name="employeeId" placeholder="PTR002" />
+            <Input id="employeeId" name="employeeId" />
           </div>
 
           <div className="grid gap-1.5">
             <Label htmlFor="mobile" className="text-xs text-muted-foreground">
               Mobile Number
             </Label>
-            <Input id="mobile" name="mobile" type="tel" placeholder="9876543210" required />
+            <Input id="mobile" name="mobile" type="tel" required />
           </div>
 
           <div className="grid gap-1.5">
             <Label htmlFor="password" className="text-xs text-muted-foreground">
               Password
             </Label>
-            <Input id="password" name="password" type="password" placeholder="password123" />
+            <Input id="password" name="password" type="password" />
           </div>
 
           <SubmitButton size="sm" loadingText="Adding...">

@@ -9,6 +9,7 @@ import { getRequiredDocuments, type VehicleDetailsFields } from "@/lib/vehicle-l
 import { uploadDocument, markDocumentsComplete } from "@/app/dashboard/leads/[leadId]/vehicle/actions";
 
 const CATEGORY_LABELS: Record<string, string> = {
+  KYC: "KYC",
   INCOME: "Income",
   VEHICLE: "Vehicle",
 };
