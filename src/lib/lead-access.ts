@@ -26,11 +26,18 @@ export async function requireLeadAccess(leadId: string, { canManage = false } = 
       select: { assignedToId: true, createdById: true },
     });
     if (!lead) notFound();
-    const owns = lead.assignedToId === userId || lead.createdById === userId;
+    const owns = lead.assignedToId === userId || lead.createdById === userId || !lead.assignedToId;
     if (!owns) notFound();
   }
 
-  const ip = (await headers()).get("x-forwarded-for") ?? "127.0.0.1";
+  let ip = "127.0.0.1";
+  try {
+    const headersList = await headers();
+    ip = headersList.get("x-forwarded-for")?.split(",")[0]?.trim() || "127.0.0.1";
+  } catch {
+    // headers() may throw if called outside request context
+  }
+
   return { actorId: userId, ip, role, isManager };
 }
 
@@ -40,20 +47,25 @@ export async function advanceStatusIfFurther(
   actorId: string,
   ip: string,
 ) {
-  const { STATUS_PIPELINE_ORDER } = await import("@/lib/products");
-  const lead = await db.lead.findUniqueOrThrow({ where: { id: leadId }, select: { status: true } });
+  try {
+    const { STATUS_PIPELINE_ORDER } = await import("@/lib/products");
+    const lead = await db.lead.findUnique({ where: { id: leadId }, select: { status: true } });
+    if (!lead) return;
 
-  const currentIndex = STATUS_PIPELINE_ORDER.indexOf(
-    lead.status as (typeof STATUS_PIPELINE_ORDER)[number],
-  );
-  const nextIndex = STATUS_PIPELINE_ORDER.indexOf(nextStatus);
-  if (nextIndex <= currentIndex) return;
+    const currentIndex = STATUS_PIPELINE_ORDER.indexOf(
+      lead.status as (typeof STATUS_PIPELINE_ORDER)[number],
+    );
+    const nextIndex = STATUS_PIPELINE_ORDER.indexOf(nextStatus);
+    if (nextIndex <= currentIndex) return;
 
-  await db.$transaction([
-    db.lead.update({ where: { id: leadId }, data: { status: nextStatus } }),
-    db.statusHistoryEntry.create({ data: { leadId, status: nextStatus, changedBy: actorId } }),
-    db.activityLog.create({
-      data: { actorId, action: "STATUS_CHANGED", entityType: "Lead", entityId: leadId, ipAddress: ip },
-    }),
-  ]);
+    await db.$transaction([
+      db.lead.update({ where: { id: leadId }, data: { status: nextStatus } }),
+      db.statusHistoryEntry.create({ data: { leadId, status: nextStatus, changedBy: actorId } }),
+      db.activityLog.create({
+        data: { actorId, action: "STATUS_CHANGED", entityType: "Lead", entityId: leadId, ipAddress: ip },
+      }),
+    ]);
+  } catch (err) {
+    console.error("advanceStatusIfFurther failed:", err);
+  }
 }

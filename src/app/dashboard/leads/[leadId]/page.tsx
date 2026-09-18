@@ -43,7 +43,7 @@ export default async function LeadDetailPage({
   ]);
 
   if (!lead) notFound();
-  if (!canManage && lead.assignedToId !== userId && lead.createdById !== userId) notFound();
+  if (!canManage && lead.assignedToId && lead.assignedToId !== userId && lead.createdById !== userId) notFound();
 
   const product = getProductOption(lead.productType);
   const changeStatusWithId = changeStatus.bind(null, lead.id);
@@ -109,7 +109,7 @@ export default async function LeadDetailPage({
                   <li key={entry.id} className="flex items-center justify-between text-sm">
                     <span>{STATUS_LABELS[entry.status] ?? entry.status}</span>
                     <span className="text-xs text-muted-foreground">
-                      {entry.changedAt.toLocaleString("en-IN", {
+                      {new Date(entry.changedAt).toLocaleString("en-IN", {
                         day: "numeric",
                         month: "short",
                         hour: "2-digit",
@@ -173,7 +173,7 @@ export default async function LeadDetailPage({
                   <li key={note.id} className="text-sm">
                     <p>{note.text}</p>
                     <p className="mt-0.5 text-xs text-muted-foreground">
-                      {note.createdAt.toLocaleString("en-IN", {
+                      {new Date(note.createdAt).toLocaleString("en-IN", {
                         day: "numeric",
                         month: "short",
                         hour: "2-digit",
@@ -244,7 +244,7 @@ export default async function LeadDetailPage({
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">Created</dt>
                 <dd>
-                  {lead.createdAt.toLocaleDateString("en-IN", {
+                  {new Date(lead.createdAt).toLocaleDateString("en-IN", {
                     day: "numeric",
                     month: "short",
                     year: "numeric",
