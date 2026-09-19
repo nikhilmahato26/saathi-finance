@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Check, Upload } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { REQUIRED_DOCUMENTS } from "@/lib/home-loan-schema";
+import { REQUIRED_DOCUMENTS, type KycMember } from "@/lib/home-loan-schema";
 import {
   uploadDocument,
   markDocumentsComplete,
@@ -19,18 +19,30 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 export function DocumentsStation({
   leadId,
+  members,
   uploadedDocTypes,
   isComplete,
   onSaved,
 }: {
   leadId: string;
+  members?: KycMember[];
   uploadedDocTypes: Set<string>;
   isComplete: boolean;
   onSaved: () => void;
 }) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
-  const categories = Array.from(new Set(REQUIRED_DOCUMENTS.map((d) => d.category)));
+
+  const memberDocs = (members ?? []).flatMap((m, idx) => {
+    const label = m.name?.trim() ? m.name.trim() : `Member ${idx + 1}`;
+    return [
+      { category: "KYC" as const, docType: `Member: ${label} - Aadhaar Card` },
+      { category: "KYC" as const, docType: `Member: ${label} - PAN Card` },
+    ];
+  });
+
+  const allDocuments = [...REQUIRED_DOCUMENTS, ...memberDocs];
+  const categories = Array.from(new Set(allDocuments.map((d) => d.category)));
 
   function handleUpload(category: string, docType: string, file: File) {
     const formData = new FormData();
@@ -61,7 +73,7 @@ export function DocumentsStation({
             {CATEGORY_LABELS[category] ?? category}
           </p>
           <div className="grid gap-2 sm:grid-cols-2">
-            {REQUIRED_DOCUMENTS.filter((doc) => doc.category === category).map((doc) => {
+            {allDocuments.filter((doc) => doc.category === category).map((doc) => {
               const uploaded = uploadedDocTypes.has(doc.docType);
               return (
                 <label

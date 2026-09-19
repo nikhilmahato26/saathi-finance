@@ -6,6 +6,7 @@ import {
   PROPERTY_TYPES,
   OWNERSHIP_TYPES,
   PROCESSING_FEE_INR,
+  MEMBER_RELATIONS,
 } from "@/lib/home-loan-schema";
 
 function labelOf(options: readonly { key: string; label: string }[], key?: string) {
@@ -68,7 +69,7 @@ export function HomeLoanApplicationPdf({
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Customer</Text>
+          <Text style={styles.sectionTitle}>Customer (Primary Applicant)</Text>
           <Row label="Name" value={customerName} />
           <Row label="Mobile" value={customerMobile} />
           <Row label="Loan sub-type" value={subTypeLabel ?? "-"} />
@@ -77,6 +78,30 @@ export function HomeLoanApplicationPdf({
           <Row label="Date of birth" value={fields.kyc?.dob ?? "-"} />
           <Row label="Address" value={fields.kyc?.address ?? "-"} />
         </View>
+
+        {fields.kyc?.members && fields.kyc.members.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>
+              Co-Applicants / Additional Members KYC ({fields.kyc.members.length})
+            </Text>
+            {fields.kyc.members.map((member, idx) => {
+              const relationLabel =
+                MEMBER_RELATIONS.find((r) => r.key === member.relation)?.label ?? member.relation;
+              return (
+                <View key={member.id || idx} style={{ marginBottom: 6 }}>
+                  <Text style={{ fontSize: 9, fontWeight: 700, color: "#0a0a0a", marginBottom: 2 }}>
+                    Member {idx + 1}: {member.name || "-"} ({relationLabel})
+                  </Text>
+                  <Row label="PAN" value={member.pan || "-"} />
+                  <Row label="Aadhaar" value={member.aadhaar || "-"} />
+                  <Row label="Date of birth" value={member.dob || "-"} />
+                  {member.mobile ? <Row label="Mobile" value={member.mobile} /> : null}
+                  <Row label="Address" value={member.address || "-"} />
+                </View>
+              );
+            })}
+          </View>
+        )}
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Employment & Income</Text>

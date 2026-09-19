@@ -32,7 +32,21 @@ async function mergeFields(leadId: string, patch: Partial<HomeLoanFields>) {
 
 export async function saveKyc(leadId: string, _prev: StationFormState, formData: FormData): Promise<StationFormState> {
   const { actorId, ip } = await requireLeadAccess(leadId);
-  const parsed = kycSchema.safeParse(Object.fromEntries(formData));
+  const rawEntries = Object.fromEntries(formData);
+  const rawMembers = formData.get("members");
+  let members: unknown = [];
+  if (typeof rawMembers === "string" && rawMembers.trim()) {
+    try {
+      members = JSON.parse(rawMembers);
+    } catch {
+      return { error: "Invalid members data format." };
+    }
+  }
+
+  const parsed = kycSchema.safeParse({
+    ...rawEntries,
+    members,
+  });
   if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Check the form." };
 
   await mergeFields(leadId, { kyc: parsed.data });

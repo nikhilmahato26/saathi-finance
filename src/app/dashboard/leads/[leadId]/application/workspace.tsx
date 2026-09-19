@@ -94,6 +94,7 @@ export function ApplicationWorkspace({
         {current === "documents" && (
           <DocumentsStation
             leadId={leadId}
+            members={fields.kyc?.members}
             uploadedDocTypes={new Set(uploadedDocTypes)}
             isComplete={documentsComplete}
             onSaved={() => goToNext("documents")}

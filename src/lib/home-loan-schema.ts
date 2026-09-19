@@ -24,6 +24,36 @@ export const OWNERSHIP_TYPES = [
   { key: "FAMILY", label: "Family-owned" },
 ] as const;
 
+export const MEMBER_RELATIONS = [
+  { key: "SPOUSE", label: "Spouse" },
+  { key: "FATHER", label: "Father" },
+  { key: "MOTHER", label: "Mother" },
+  { key: "SON", label: "Son" },
+  { key: "DAUGHTER", label: "Daughter" },
+  { key: "BROTHER", label: "Brother" },
+  { key: "SISTER", label: "Sister" },
+  { key: "CO_BORROWER", label: "Co-Borrower / Co-Applicant" },
+  { key: "BUSINESS_PARTNER", label: "Business Partner" },
+  { key: "OTHER", label: "Other" },
+] as const;
+
+export const kycMemberSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1, "Member full name is required"),
+  relation: z.string().min(1, "Relationship is required"),
+  dob: z.string().min(1, "Member date of birth is required"),
+  pan: z
+    .string()
+    .regex(/^[A-Z]{5}[0-9]{4}[A-Z]$/, "Member PAN must be in the format ABCDE1234F"),
+  aadhaar: z.string().regex(/^\d{12}$/, "Member Aadhaar must be 12 digits"),
+  address: z.string().min(1, "Member address is required"),
+  mobile: z
+    .string()
+    .refine((val) => !val || /^\d{10}$/.test(val), "Member mobile number must be 10 digits")
+    .optional(),
+});
+export type KycMember = z.infer<typeof kycMemberSchema>;
+
 export const kycSchema = z.object({
   dob: z.string().min(1, "Date of birth is required"),
   address: z.string().min(1, "Address is required"),
@@ -32,6 +62,19 @@ export const kycSchema = z.object({
     .regex(/^[A-Z]{5}[0-9]{4}[A-Z]$/, "PAN must be in the format ABCDE1234F"),
   aadhaar: z.string().regex(/^\d{12}$/, "Aadhaar must be 12 digits"),
   subType: z.enum(["LAP", "HL", "P_C", "HOUSE_PURCHASE"]),
+  members: z
+    .preprocess((val) => {
+      if (typeof val === "string") {
+        try {
+          return JSON.parse(val);
+        } catch {
+          return [];
+        }
+      }
+      return val ?? [];
+    }, z.array(kycMemberSchema).max(3, "Maximum 3 members can be added"))
+    .optional()
+    .default([]),
 });
 export type KycFields = z.infer<typeof kycSchema>;
 
